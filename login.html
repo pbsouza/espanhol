@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Painel Administrativo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+    <script src="config.js"></script>
+</head>
+<body class="adm-body" style="display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0;">
+
+    <div class="adm-container" style="max-width: 400px; width: 100%; box-sizing: border-box;">
+        <h2 style="text-align: center; margin-bottom: 10px;">🔒 Acesso Restrito</h2>
+        <p class="adm-sub" style="text-align: center;">Faça login para gerenciar as programações.</p>
+
+        <form id="form-login">
+            <div class="form-group">
+                <label for="login-email">E-mail:</label>
+                <input type="email" id="login-email" placeholder="seu-email@email.com" required>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="login-senha">Senha:</label>
+                <input type="password" id="login-senha" placeholder="Sua senha secreta" required>
+            </div>
+
+            <button type="submit" class="btn-salvar" style="width: 100%;">🔓 Entrar no Painel</button>
+        </form>
+        
+        <p id="erro-login" style="color: #ff4d4d; text-align: center; margin-top: 15px; font-weight: bold; display: none;"></p>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>

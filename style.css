@@ -576,3 +576,237 @@ body.fonte-grande div,
 body.fonte-grande strong {
     font-size: inherit-calc; /* Força o navegador a recalcular com base no tamanho maior */
 }
+
+/* --- ESTILOS DO PAINEL ADM --- */
+.adm-body {
+    background-color: #f7f9fa;
+    padding: 20px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.adm-container {
+    max-width: 700px;
+    margin: 0 auto 50px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.adm-sub {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+fieldset {
+    border: 1px solid #d1b2e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    background-color: #fcf9fc;
+}
+
+legend {
+    font-weight: bold;
+    color: #5d3b70;
+    padding: 0 10px;
+    font-size: 1.1rem;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.form-group input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.form-group input:focus {
+    border-color: #5d3b70;
+    outline: none;
+    box-shadow: 0 0 4px rgba(93, 59, 112, 0.2);
+}
+
+.btn-salvar {
+    width: 100%;
+    background-color: #5d3b70;
+    color: white;
+    border: none;
+    padding: 14px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-salvar:hover {
+    background-color: #4a2e5a;
+}
+
+/* --- ESTILOS PARA OS CAMPOS DINÂMICOS DO ADM --- */
+.adm-ajuda {
+    font-size: 0.85rem;
+    color: #777;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+/* Cartão que envolve cada parte dinâmica adicionada */
+.card-dinamico {
+    background-color: #fff;
+    border: 1px dashed #d1b2e0;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+/* Linha dupla de campos para economizar espaço em telas grandes */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Botão de excluir uma parte específica */
+.btn-remover-parte {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+    margin-bottom: 10px;
+}
+
+.btn-remover-parte:hover {
+    background-color: #cc0000;
+}
+
+/* Botões de adicionar (pílulas roxas vazadas) */
+.btn-adicionar-dinamico {
+    background-color: transparent;
+    color: #5d3b70;
+    border: 2px dashed #5d3b70;
+    padding: 10px;
+    width: 100%;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+}
+
+.btn-adicionar-dinamico:hover {
+    background-color: #5d3b70;
+    color: white;
+}
+
+/* --- MODAL PERSONALIZADO (ALERTA) --- */
+
+/* Fundo escurecido que cobre a tela toda */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Quando o modal ganha a classe .mostrar, ele aparece */
+.modal-overlay.mostrar {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Caixa branca centralizada */
+.modal-conteudo {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+/* Animação de zoom ao abrir */
+.modal-overlay.mostrar .modal-conteudo {
+    transform: scale(1);
+}
+
+.modal-icone {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.modal-conteudo h3 {
+    margin: 0 0 10px 0;
+    color: #5d3b70;
+    font-size: 1.4rem;
+}
+
+.modal-conteudo p {
+    margin: 0 0 20px 0;
+    color: #565656;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Botão elegante do Modal */
+.btn-modal-ok {
+    background-color: #5d3b70;
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+}
+
+.btn-modal-ok:hover {
+    background-color: #4a2e5a;
+}
+
+/* Força os inputs, labels e fieldsets do ADM a herdarem o zoom do body */
+body.zoom-plus-1 input, body.zoom-plus-1 label, body.zoom-plus-1 legend, body.zoom-plus-1 button { font-size: 1.1rem !important; }
+body.zoom-plus-2 input, body.zoom-plus-2 label, body.zoom-plus-2 legend, body.zoom-plus-2 button { font-size: 1.25rem !important; }
+body.zoom-plus-3 input, body.zoom-plus-3 label, body.zoom-plus-3 legend, body.zoom-plus-3 button { font-size: 1.4rem !important; }
+
+body.zoom-minus-1 input, body.zoom-minus-1 label, body.zoom-minus-1 legend, body.zoom-minus-1 button { font-size: 0.9rem !important; }
+body.zoom-minus-2 input, body.zoom-minus-2 label, body.zoom-minus-2 legend, body.zoom-minus-2 button { font-size: 0.8rem !important; }
+body.zoom-minus-3 input, body.zoom-minus-3 label, body.zoom-minus-3 legend, body.zoom-minus-3 button { font-size: 0.7rem !important; }
+
+/* Ajusta o espaçamento dos grupos para não esmagar quando o texto crescer */
+body[class*="zoom-plus-"] .form-group {
+    margin-bottom: 20px;
+}

@@ -1,20 +1,114 @@
+let reunioes = [];
+let indiceAtual = 0;
+
 // reuniao_meio_semana.js
-function carregarDadosReuniao() {
-  db.collection("reunioes_meio_semana").doc("2026-06-08").get()
-    .then((doc) => {
-      if (doc.exists) {
-        const dados = doc.data();
-        console.log("Dados da reunião:", dados);
-        
-        // Aqui vamos chamar a função para construir a tabela na tela
-        exibirTabelaReuniao(dados, doc.id);
-      } else {
-        console.log("Nenhuma reunião encontrada para esta data.");
-      }
-    })
-    .catch((error) => {
-      console.error("Erro ao buscar dados:", error);
+async function carregarListaReunioes() {
+
+  try {
+
+    const snapshot = await db
+      .collection("reunioes_meio_semana")
+      .orderBy("data")
+      .get();
+
+    reunioes = [];
+
+    snapshot.forEach((doc) => {
+
+      reunioes.push({
+        id: doc.id,
+        ...doc.data()
+      });
+
     });
+
+    if (reunioes.length === 0) {
+
+      console.log("Nenhuma reunião encontrada.");
+      return;
+
+    }
+
+    determinarIndiceInicial();
+
+    carregarReuniaoAtual();
+
+  } catch (error) {
+
+    console.error(
+      "Erro ao carregar reuniões:",
+      error
+    );
+
+  }
+
+}
+
+function determinarIndiceInicial() {
+
+  const hoje = new Date();
+
+  const hojeTexto = formatarDataItem(hoje);
+
+  indiceAtual = 0;
+
+  for (let i = 0; i < reunioes.length; i++) {
+
+    if (reunioes[i].id >= hojeTexto) {
+
+      indiceAtual = i;
+      return;
+
+    }
+
+  }
+
+  indiceAtual = reunioes.length - 1;
+
+}
+
+function carregarReuniaoAtual() {
+
+  if (
+    indiceAtual < 0 ||
+    indiceAtual >= reunioes.length
+  ) {
+    return;
+  }
+
+  const reuniao = reunioes[indiceAtual];
+
+  exibirTabelaReuniao(
+    reuniao,
+    reuniao.id
+  );
+
+  atualizarBotoesNavegacao();
+
+}
+
+function atualizarBotoesNavegacao() {
+
+  const btnAnterior =
+    document.getElementById("btn-anterior");
+
+  const btnProxima =
+    document.getElementById("btn-proxima");
+
+  if (btnAnterior) {
+
+    btnAnterior.disabled =
+      indiceAtual === 0;
+
+  }
+
+  if (btnProxima) {
+
+    btnProxima.disabled =
+      indiceAtual === reunioes.length - 1;
+
+  }
+
 }
 
 function exibirTabelaReuniao(dados, dataId) {
@@ -212,3 +306,81 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+function formatarDataItem(data) {
+
+  const ano = data.getFullYear();
+
+  const mes = String(
+    data.getMonth() + 1
+  ).padStart(2, "0");
+
+  const dia = String(
+    data.getDate()
+  ).padStart(2, "0");
+
+  return `${ano}-${mes}-${dia}`;
+
+}
+
+function configurarNavegacao() {
+
+  const btnAnterior =
+    document.getElementById("btn-anterior");
+
+  const btnProxima =
+    document.getElementById("btn-proxima");
+
+  if (btnAnterior) {
+
+    btnAnterior.addEventListener(
+      "click",
+      () => {
+
+        if (indiceAtual > 0) {
+
+          indiceAtual--;
+
+          carregarReuniaoAtual();
+
+        }
+
+      }
+    );
+
+  }
+
+  if (btnProxima) {
+
+    btnProxima.addEventListener(
+      "click",
+      () => {
+
+        if (
+          indiceAtual <
+          reunioes.length - 1
+        ) {
+
+          indiceAtual++;
+
+          carregarReuniaoAtual();
+
+        }
+
+      }
+    );
+
+  }
+
+}
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
+
+    configurarNavegacao();
+
+    await carregarListaReunioes();
+
+  }
+);

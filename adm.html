@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel ADM - Designações da Reuniões</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
+</head>
+<body class="adm-body">
+
+    <div class="adm-container">
+        <h2>📝 Designar Participantes da Reunião do Meio de Semana</h2>
+        <p class="adm-sub">Insira os dados da reunião abaixo para atualizar o site automaticamente.</p>
+
+        <form id="form-reuniao">
+            <fieldset>
+                <legend>🗓️ Informações Gerais</legend>
+                <div class="form-group">
+                    <label for="id-semana">ID do Documento (Segunda-feira - ex: 2026-06-08):</label>
+                    <input type="date" id="id-semana" required>
+                </div>
+                <div class="form-group">
+                    <label for="leitura-semana">Leitura da Semana:</label>
+                    <input type="text" id="leitura-semana" placeholder="Ex: ISAÍAS 60-61" required>
+                </div>
+                <div class="form-group">
+                    <label for="presidente">Presidente:</label>
+                    <input type="text" id="presidente" placeholder="Nome do irmão" required>
+                </div>
+                <div class="form-group">
+                    <label for="oracao-inicial">Oração Inicial:</label>
+                    <input type="text" id="oracao-inicial" placeholder="Nome do irmão" required>
+                </div>
+                <div class="form-group">
+                    <label for="conselheiro-sala-b">Conselheiro da Sala B:</label>
+                    <input type="text" id="conselheiro-sala-b" placeholder="Nome do irmão">
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>💎 Tesouros da Palavra de Deus</legend>
+                <h3>Discurso de 10 min</h3>
+                <div class="form-group">
+                    <label for="tesouros-discurso-tema">Tema do Discurso:</label>
+                    <input type="text" id="tesouros-discurso-tema" placeholder="Tema da parte" required>
+                </div>
+                <div class="form-group">
+                    <label for="tesouros-discurso-designado">Designado (Salão Principal):</label>
+                    <input type="text" id="tesouros-discurso-designado" placeholder="Nome do irmão" required>
+                </div>
+
+                <h3>Joias Espirituais (10 min)</h3>
+                <div class="form-group">
+                    <label for="tesouros-joias-tema">Tema das Joias:</label>
+                    <input type="text" id="tesouros-joias-tema" placeholder="Tema" required>
+                </div>
+                <div class="form-group">
+                    <label for="tesouros-joias-designado">Designado (Salão Principal):</label>
+                    <input type="text" id="tesouros-joias-designado" placeholder="Nome do irmão" required>
+                </div>
+
+                <h3>Leitura da Bíblia</h3>
+                <div class="form-group">
+                    <label for="leitura-principal">Salão Principal:</label>
+                    <input type="text" id="leitura-principal" placeholder="Nome do estudante" required>
+                </div>
+                <div class="form-group">
+                    <label for="leitura-sala-b">Sala B:</label>
+                    <input type="text" id="leitura-sala-b" placeholder="Nome do estudante">
+                </div>
+            </fieldset>
+
+<fieldset>
+                <legend>🌾 Faça Seu Melhor no Ministério</legend>
+                <p class="adm-ajuda">Adicione as partes da semana (Ex: Inicie Conversas, Prossiga, etc.)</p>
+                
+                <div id="container-ministerio-partes"></div>
+                
+                <button type="button" id="btn-add-ministerio" class="btn-adicionar-dinamico">
+                    ➕ Adicionar Parte do Ministério
+                </button>
+            </fieldset>
+
+            <fieldset>
+                <legend>🐑 Nossa Vida Cristã</legend>
+                <p class="adm-ajuda">Adicione as partes locais, necessidades da congregação ou Estudo Bíblico</p>
+                
+                <div id="container-vida-partes"></div>
+                
+                <button type="button" id="btn-add-vida" class="btn-adicionar-dinamico">
+                    ➕ Adicionar Parte da Vida Cristã
+                </button>
+            </fieldset>
+
+
+            <fieldset>
+                <legend>🏁 Encerramento</legend>
+                <div class="form-group">
+                    <label for="oracao-final">Oração Final:</label>
+                    <input type="text" id="oracao-final" placeholder="Nome do irmão" required>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn-salvar">💾 Salvar Programação</button>
+        </form>
+    </div>
+
+        <div class="acessibilidade-container">
+        <span class="acessibilidade-label">Texto:</span>
+        <button id="btn-diminuir" class="btn-acessibilidade" title="Diminuir texto">A-</button>
+        <button id="btn-normal" class="btn-acessibilidade" title="Texto normal">A</button>
+        <button id="btn-aumentar" class="btn-acessibilidade" title="Aumentar texto">A+</button>
+    </div>
+
+    <div id="modal-alerta" class="modal-overlay">
+        <div class="modal-conteudo">
+            <div class="modal-icone">✔</div>
+            <h3 id="modal-titulo">Sucesso!</h3>
+            <p id="modal-mensagem">A programação foi salva com sucesso no banco de dados.</p>
+            <button type="button" id="btn-fechar-modal" class="btn-modal-ok">Ok!</button>
+        </div>
+    </div>
+
+    <script src="adm.js"></script>
+
+</body>
+</html>
