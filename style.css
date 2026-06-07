@@ -503,3 +503,76 @@ footer a:hover {
 .btn-proxima:hover {
     background-color: #4a2e5a;
 }
+
+/* Container de Acessibilidade Fixo no Canto Inferior Direito */
+.acessibilidade-container {
+    position: fixed;
+    bottom: 20px; /* Mantém a distância do fundo da tela */
+    right: 20px;  /* Alinha fixo na lateral direita */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.92); /* Fundo semi-transparente */
+    backdrop-filter: blur(5px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    border: 1px solid #d1b2e0;
+    box-shadow: 0 4px 15px rgba(93, 59, 112, 0.15);
+    z-index: 1000;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Label "Texto:" discreto */
+.acessibilidade-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #5d3b70;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Botões de A- / A / A+ (Mantemos o visual redondo e moderno) */
+.btn-acessibilidade {
+    background-color: #ffffff;
+    color: #5d3b70;
+    border: 1px solid #d1b2e0;
+    width: 34px;
+    height: 34px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.btn-acessibilidade:hover {
+    background-color: #5d3b70;
+    color: #ffffff;
+    border-color: #5d3b70;
+    transform: scale(1.05); /* Dá um leve zoom ao passar o mouse */
+}
+
+/* --- ESCALA DE ACESSIBILIDADE (ZOOM DINÂMICO) --- */
+
+/* Níveis para Diminuir Texto */
+body.zoom-minus-1, body.zoom-minus-1 .secao-bloco, body.zoom-minus-1 .sala-box, body.zoom-minus-1 div, body.zoom-minus-1 strong { font-size: 0.95rem !important; }
+body.zoom-minus-2, body.zoom-minus-2 .secao-bloco, body.zoom-minus-2 .sala-box, body.zoom-minus-2 div, body.zoom-minus-2 strong { font-size: 0.90rem !important; }
+body.zoom-minus-3, body.zoom-minus-3 .secao-bloco, body.zoom-minus-3 .sala-box, body.zoom-minus-3 div, body.zoom-minus-3 strong { font-size: 0.85rem !important; }
+
+/* Níveis para Aumentar Texto */
+body.zoom-plus-1, body.zoom-plus-1 .secao-bloco, body.zoom-plus-1 .sala-box, body.zoom-plus-1 div, body.zoom-plus-1 strong { font-size: 1.15rem !important; }
+body.zoom-plus-2, body.zoom-plus-2 .secao-bloco, body.zoom-plus-2 .sala-box, body.zoom-plus-2 div, body.zoom-plus-2 strong { font-size: 1.30rem !important; }
+body.zoom-plus-3, body.zoom-plus-3 .secao-bloco, body.zoom-plus-3 .sala-box, body.zoom-plus-3 div, body.zoom-plus-3 strong { font-size: 1.45rem !important; }
+
+/* Garante que os elementos internos respeitem o tamanho dinâmico do body */
+body.fonte-grande .secao-bloco, 
+body.fonte-grande .secao-cabecalho, 
+body.fonte-grande .sala-box,
+body.fonte-grande div, 
+body.fonte-grande strong {
+    font-size: inherit-calc; /* Força o navegador a recalcular com base no tamanho maior */
+}
