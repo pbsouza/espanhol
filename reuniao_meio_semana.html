@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programação da Reunião do Meio da Semana</title>
+    <!-- Vinculando o arquivo de estilos que já possui as regras dos cards -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header style="text-align: center; margin-bottom: 20px;">
+        <h1>Nossa Vida e Ministério Cristão</h1>
+    <div class="nav-container">
+        <button id="btn-anterior" class="btn-nav btn-anterior">⬅️ Semana Anterior</button>
+        <button id="btn-proxima" class="btn-nav btn-proxima">Próxima Semana ➡️</button>
+    </div>
+    </header>
+
+    <main>
+        <!-- Container principal onde o JavaScript injetará os blocos coloridos -->
+        <div id="container-reuniao" class="reuniao-container">
+            <p style="text-align: center; color: #666;">Carregando programação da semana...</p>
+        </div>
+    </main>
+
+    <!-- Configuração do Firebase (Certifique-se de manter as suas credenciais aqui) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="idiomas.js"></script>
+
+    
+    <!-- Arquivo de script que busca os dados e monta a página -->
+    <script src="reuniao_meio_semana.js"></script>
+    <script>
+        // Executa a função assim que a página termina de carregar
+        document.addEventListener("DOMContentLoaded", () => {
+            carregarDadosReuniao();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadro de Anúncios</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1 id="titulo">
+            Quadro de Anúncios da Congregação Espanhola de Linhares
+        </h1>
+
+        <div class="idiomas">
+            <button id="btnPT" class="btn-idioma portugues">
+                Português
+            </button>
+
+            <button id="btnES" class="btn-idioma espanhol">
+                Español
+            </button>
+        </div>
+
+        <!-- ANÚNCIOS -->
+
+        <section class="secao-anuncios">
+
+            <h2 id="tituloAnuncios">
+                Anúncios e Lembretes
+            </h2>
+
+            <div class="card-anuncios">
+
+                <h3 id="tituloEventos">
+                    Próximos Eventos
+                </h3>
+
+                <div id="listaEventos">
+                    <!-- Preenchido dinamicamente pelo JS -->
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ATIVIDADES -->
+
+        <section class="secao-atividades">
+
+            <h2 id="tituloAtividades">
+                Atividades
+            </h2>
+
+            <nav class="menu-imagens">
+
+                <a href="reuniao_meio_semana.html" class="card-menu">
+                    <img src="img/meio-semana.jpg" alt="Reunião Meio de Semana">
+                    <span id="linkMeioSemana">
+                        Reunião Meio de Semana
+                    </span>
+                </a>
+
+                <a href="reuniao_fim_semana.html" class="card-menu">
+                    <img src="img/fim-semana.jpg" alt="Reunião Fim de Semana">
+                    <span id="linkFimSemana">
+                        Reunião Fim de Semana
+                    </span>
+                </a>
+
+                <a href="limpeza.html" class="card-menu">
+                    <img src="img/limpeza.jpg" alt="Limpeza do Salão">
+                    <span id="linkLimpeza">
+                        Limpeza do Salão
+                    </span>
+                </a>
+
+                <a href="testemunho_publico.html" class="card-menu">
+                    <img src="img/testemunho_publico.jpg" alt="Programação de Campo">
+                    <span id="linkCampo">
+                        Programação de Campo
+                    </span>
+                </a>
+
+                <a href="grupos.html" class="card-menu">
+                    <img src="img/grupos.jpg" alt="Grupos">
+                    <span id="linkGrupos">
+                        Grupos
+                    </span>
+                </a>
+
+            </nav>
+
+        </section>
+
+    </div>
+
+    <footer>
+        <hr>
+
+        <a href="admin.html" id="linkAdmin">
+            Acessar como administrador
+        </a>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script src="config.js"></script>
+
+    <script src="idiomas.js"></script>
+    <script src="eventos.js"></script>
+
+</body>
+
+</html>
