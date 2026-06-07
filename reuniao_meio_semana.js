@@ -157,3 +157,58 @@ function exibirTabelaReuniao(dados, dataId) {
   // Injeta todas as partes no HTML
   container.innerHTML = htmlGeral + htmlTesouros + htmlMinisterio + htmlVida;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const btnDiminuir = document.getElementById("btn-diminuir");
+  const btnNormal = document.getElementById("btn-normal");
+  const btnAumentar = document.getElementById("btn-aumentar");
+
+  // Nível 0 é o padrão. Vai de -3 (mínimo) até +3 (máximo)
+  let nivelAtual = 0;
+
+  // Lista de todas as classes de zoom possíveis para facilitar a limpeza
+  const todasAsClasses = [
+    "zoom-minus-3", "zoom-minus-2", "zoom-minus-1",
+    "zoom-plus-1", "zoom-plus-2", "zoom-plus-3"
+  ];
+
+  // Função interna para aplicar a classe correta no body
+  function atualizarZoom() {
+    // 1. Remove todas as classes de zoom existentes no body
+    document.body.classList.remove(...todasAsClasses);
+
+    // 2. Aplica a classe correspondente ao nível atual
+    if (nivelAtual > 0) {
+      document.body.classList.add(`zoom-plus-${nivelAtual}`);
+    } else if (nivelAtual < 0) {
+      document.body.classList.add(`zoom-minus-${Math.abs(nivelAtual)}`); // Math.abs transforma -1 em 1
+    }
+    
+    console.log("Nível de Zoom Atual:", nivelAtual);
+  }
+
+  if (btnDiminuir && btnNormal && btnAumentar) {
+    
+    // Botão A+ (Aumentar até 3 vezes)
+    btnAumentar.addEventListener("click", () => {
+      if (nivelAtual < 3) {
+        nivelAtual++;
+        atualizarZoom();
+      }
+    });
+
+    // Botão A- (Diminuir até 3 vezes)
+    btnDiminuir.addEventListener("click", () => {
+      if (nivelAtual > -3) {
+        nivelAtual--;
+        atualizarZoom();
+      }
+    });
+
+    // Botão A (Reseta direto para o padrão)
+    btnNormal.addEventListener("click", () => {
+      nivelAtual = 0;
+      atualizarZoom();
+    });
+  }
+});
