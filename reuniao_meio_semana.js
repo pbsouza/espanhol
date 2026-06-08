@@ -200,15 +200,18 @@ function exibirTabelaReuniao(dados, dataId) {
   }
   htmlMinisterio += `</div>`; 
 
-  // 4. Bloco: Nossa Vida Cristã (Geração Dinâmica)
-let htmlVida = `<h3 class="secao-titulo vida-crista-cor">🐑 Nossa Vida Cristã</h3>`;
+  // 4. Bloco: Nossa Vida Cristã (Padronizado com o CSS Original)
+  let htmlVida = `
+    <div class="secao-bloco">
+      <div class="secao-cabecalho bg-vida">🐑 NOSSA VIDA CRISTÃ</div>
+  `;
 
   // 1. Renderiza primeiro as partes variáveis (ex: Necessidades Locais)
   if (dados.partesVida && dados.partesVida.length > 0) {
       dados.partesVida.forEach((item) => {
           htmlVida += `
               <div class="parte-card">
-                <div class="parte-titulo"><strong>${item.parte}</strong></div>
+                <div class="col-descricao">${item.parte}</div>
                 <div class="col-salas">
                   <div class="sala-box sala-principal">
                     <strong>Orador:</strong> ${item.orador}
@@ -219,14 +222,13 @@ let htmlVida = `<h3 class="secao-titulo vida-crista-cor">🐑 Nossa Vida Cristã
       });
   }
 
-  // 2. O ESTUDO BÍBLICO FIXO (SÓ APARECE SE FOR PREENCHIDO!)
-  // Se 'dados.estudoDirigente' estiver vazio ou não existir, o sistema pula esse bloco
+  // 2. O ESTUDO BÍBLICO FIXO (Mesma estrutura de col-descricao)
   if (dados.estudoDirigente && dados.estudoDirigente.trim() !== "") {
       htmlVida += `
           <div class="parte-card" style="border-left: 4px solid #00a8ff; background-color: #f7fbfe;">
-            <div class="parte-titulo"><strong>Estudo Bíblico de Congregação</strong></div>
+            <div class="col-descricao">Estudo Bíblico de Congregação</div>
             <div class="col-salas">
-              <div class="sala-box sala-principal">
+              <div class="sala-box sala-principal" style="border-left-color: #00a8ff;">
                 <strong>Dirigente:</strong> ${dados.estudoDirigente} <br>
                 <strong>Leitor:</strong> ${dados.estudoLeitor || 'Não designado'}
               </div>
@@ -235,24 +237,19 @@ let htmlVida = `<h3 class="secao-titulo vida-crista-cor">🐑 Nossa Vida Cristã
       `;
   }
 
-  // 3. Renderiza o Cântico Final e Oração Final no fechamento da seção
+  // 3. Renderiza o Cântico Final e Oração Final com visual integrado
   htmlVida += `
-      <div class="parte-card" style="border-top: 1px dashed #ccc; margin-top: 10px; padding-top: 10px;">
+      <div class="parte-card" style="border-top: 1px dashed #ccc; background-color: #fafafa;">
         <div class="col-salas">
-          <div class="sala-box sala-principal" style="display: flex; flex-direction: column; gap: 5px;">
+          <div class="sala-box sala-principal" style="border-left-color: var(--cor-secundaria); display: flex; flex-direction: column; gap: 5px;">
             <div><strong>🎵 Cântico Final:</strong> ${dados.canticoFinal || 'Não definido'}</div>
             <div><strong>Oração Final:</strong> ${dados.oracaoFinal || 'Não definida'}</div>
           </div>
         </div>
       </div>
-  `;
+    </div> `;
 
-
-  htmlVida += `</div>`;   
-
-  // Injeta todas as partes no HTML
-  container.innerHTML = htmlGeral + htmlTesouros + htmlMinisterio + htmlVida;
-}
+  htmlVida += `</div>`;
 
 document.addEventListener("DOMContentLoaded", () => {
   const btnDiminuir = document.getElementById("btn-diminuir");
