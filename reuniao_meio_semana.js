@@ -199,8 +199,8 @@ function exibirTabelaReuniao(dados, dataId) {
     });
   }
   htmlMinisterio += `</div>`; 
-
-  // 4. Bloco: Nossa Vida Cristã (Padronizado com o CSS Original)
+  // 4. Bloco: Nossa Vida Cristã (Geração Dinâmica e Padronizada)
+  // Corrigido para alinhar o título em caixa alta com fundo de cor sólida
   let htmlVida = `
     <div class="secao-bloco">
       <div class="secao-cabecalho bg-vida">🐑 NOSSA VIDA CRISTÃ</div>
@@ -211,7 +211,7 @@ function exibirTabelaReuniao(dados, dataId) {
       dados.partesVida.forEach((item) => {
           htmlVida += `
               <div class="parte-card">
-                <div class="col-descricao">${item.parte}</div>
+                <div class="parte-titulo"><strong>${item.parte}</strong></div>
                 <div class="col-salas">
                   <div class="sala-box sala-principal">
                     <strong>Orador:</strong> ${item.orador}
@@ -222,13 +222,14 @@ function exibirTabelaReuniao(dados, dataId) {
       });
   }
 
-  // 2. O ESTUDO BÍBLICO FIXO (Mesma estrutura de col-descricao)
+  // 2. O ESTUDO BÍBLICO FIXO (SÓ APARECE SE FOR PREENCHIDO!)
+  // Se 'dados.estudoDirigente' estiver vazio ou não existir, o sistema pula esse bloco
   if (dados.estudoDirigente && dados.estudoDirigente.trim() !== "") {
       htmlVida += `
           <div class="parte-card" style="border-left: 4px solid #00a8ff; background-color: #f7fbfe;">
-            <div class="col-descricao">Estudo Bíblico de Congregação</div>
+            <div class="parte-titulo"><strong>Estudo Bíblico de Congregação</strong></div>
             <div class="col-salas">
-              <div class="sala-box sala-principal" style="border-left-color: #00a8ff;">
+              <div class="sala-box sala-principal">
                 <strong>Dirigente:</strong> ${dados.estudoDirigente} <br>
                 <strong>Leitor:</strong> ${dados.estudoLeitor || 'Não designado'}
               </div>
@@ -237,11 +238,12 @@ function exibirTabelaReuniao(dados, dataId) {
       `;
   }
 
-  // 3. Renderiza o Cântico Final e Oração Final com visual integrado
+  // 3. Renderiza o Cântico Final e Oração Final no fechamento da seção
+  // Adicionei estilos para o fundo cinza e a borda arredondada na base
   htmlVida += `
-      <div class="parte-card" style="border-top: 1px dashed #ccc; background-color: #fafafa;">
+      <div class="parte-card" style="border-top: 1px dashed #ccc; margin-top: 10px; padding-top: 10px; background-color: #f9f9f9; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
         <div class="col-salas">
-          <div class="sala-box sala-principal" style="border-left-color: var(--cor-secundaria); display: flex; flex-direction: column; gap: 5px;">
+          <div class="sala-box sala-principal" style="border-left-color: #d1b2e0; display: flex; flex-direction: column; gap: 5px;">
             <div><strong>🎵 Cântico Final:</strong> ${dados.canticoFinal || 'Não definido'}</div>
             <div><strong>Oração Final:</strong> ${dados.oracaoFinal || 'Não definida'}</div>
           </div>
@@ -251,6 +253,7 @@ function exibirTabelaReuniao(dados, dataId) {
 
   htmlVida += `</div>`;
 
+  
 document.addEventListener("DOMContentLoaded", () => {
   const btnDiminuir = document.getElementById("btn-diminuir");
   const btnNormal = document.getElementById("btn-normal");
