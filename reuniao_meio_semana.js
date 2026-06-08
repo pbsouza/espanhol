@@ -139,6 +139,7 @@ function exibirTabelaReuniao(dados, dataId) {
         <div style="font-size: 1rem;">👤 Presidente: ${dados.presidente || ''}</div>
       </div>
       <div style="padding: 12px 15px; background-color: #f1e5f5; display: flex; flex-direction: column; gap: 8px;">
+        <div><strong>🎵 Cântico Inicial:</strong> ${dados.canticoInicial || 'Não definido'}</div>
         <div><strong>Oração Inicial:</strong> ${dados.oracaoInicial || 'Não definida'}</div>
         <div><strong>Conselheiro da Sala B:</strong> ${dados.conselheiroSalaB || ''}</div>
       </div>
@@ -200,51 +201,52 @@ function exibirTabelaReuniao(dados, dataId) {
   htmlMinisterio += `</div>`; 
 
   // 4. Bloco: Nossa Vida Cristã (Geração Dinâmica)
-  let htmlVida = `
-    <div class="secao-bloco">
-      <div class="secao-cabecalho bg-vida">🐑 NOSSA VIDA CRISTÃ</div>
-  `;
+let htmlVida = `<h3 class="secao-titulo vida-crista-cor">🐑 Nossa Vida Cristã</h3>`;
 
-  if (dados.nossaVida && Array.isArray(dados.nossaVida)) {
-    dados.nossaVida.forEach((item) => {
-      htmlVida += `
-        <div class="parte-card">
-          <div class="col-descricao">${item.parte}</div>
-          <div class="col-salas">
-      `;
-
-      if (item.dirigente || item.leitor) {
-        htmlVida += `
-          <div class="sala-box sala-principal">
-            <strong>Dirigente:</strong> ${item.dirigente || ''} &nbsp;|&nbsp; <strong>Leitor:</strong> ${item.leitor || ''}
-          </div>
-        `;
-      } else if (item.designado) {
-        htmlVida += `
-          <div class="sala-box sala-principal">
-            ${item.designado}
-          </div>
-        `;
-      }
-
-      htmlVida += `
-          </div>
-        </div>
-      `;
-    });
+  // 1. Renderiza primeiro as partes variáveis (ex: Necessidades Locais)
+  if (dados.partesVida && dados.partesVida.length > 0) {
+      dados.partesVida.forEach((item) => {
+          htmlVida += `
+              <div class="parte-card">
+                <div class="parte-titulo"><strong>${item.parte}</strong></div>
+                <div class="col-salas">
+                  <div class="sala-box sala-principal">
+                    <strong>Orador:</strong> ${item.orador}
+                  </div>
+                </div>
+              </div>
+          `;
+      });
   }
 
-  // Adiciona uma linha para a Oração Final no término do bloco da Vida Cristã
+  // 2. O ESTUDO BÍBLICO FIXO (SÓ APARECE SE FOR PREENCHIDO!)
+  // Se 'dados.estudoDirigente' estiver vazio ou não existir, o sistema pula esse bloco
+  if (dados.estudoDirigente && dados.estudoDirigente.trim() !== "") {
+      htmlVida += `
+          <div class="parte-card" style="border-left: 4px solid #00a8ff; background-color: #f7fbfe;">
+            <div class="parte-titulo"><strong>Estudo Bíblico de Congregação</strong></div>
+            <div class="col-salas">
+              <div class="sala-box sala-principal">
+                <strong>Dirigente:</strong> ${dados.estudoDirigente} <br>
+                <strong>Leitor:</strong> ${dados.estudoLeitor || 'Não designado'}
+              </div>
+            </div>
+          </div>
+      `;
+  }
+
+  // 3. Renderiza o Cântico Final e Oração Final no fechamento da seção
   htmlVida += `
       <div class="parte-card" style="border-top: 1px dashed #ccc; margin-top: 10px; padding-top: 10px;">
-        
         <div class="col-salas">
-          <div class="sala-box sala-principal">
-            <strong>Oração Final:</strong> ${dados.oracaoFinal || 'Não definida'}
+          <div class="sala-box sala-principal" style="display: flex; flex-direction: column; gap: 5px;">
+            <div><strong>🎵 Cântico Final:</strong> ${dados.canticoFinal || 'Não definido'}</div>
+            <div><strong>Oração Final:</strong> ${dados.oracaoFinal || 'Não definida'}</div>
           </div>
         </div>
       </div>
   `;
+
 
   htmlVida += `</div>`;   
 

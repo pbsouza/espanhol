@@ -1,10 +1,11 @@
-// SEGURANÇA: Verifica se o utilizador está logado antes de liberar o banco
+// 🔥 SEGURANÇA: Verifica se o utilizador está logado antes de liberar o banco
 firebase.auth().onAuthStateChanged((user) => {
     if (!user) {
         // Se não houver utilizador logado, chuta para o login
         window.location.href = "login.html";
     }
 });
+
 
 // 2. AGUARDA O CARREGAMENTO DA PÁGINA
 document.addEventListener("DOMContentLoaded", () => {
@@ -13,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnAddMinisterio = document.getElementById("btn-add-ministerio");
     const containerVida = document.getElementById("container-vida-partes");
     const btnAddVida = document.getElementById("btn-add-vida");
+    const btnAddVisitaSuper = document.getElementById("btn-add-visita-super"); // 🔥 ADICIONADO AQUI!
     const formReuniao = document.getElementById("form-reuniao");
     const inputData = document.getElementById("id-semana");
 
@@ -31,6 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     const dados = doc.data();
                     
                     // Preenche os campos fixos
+                    document.getElementById("cantico-inicial").value = dados.canticoInicial || "";
+                    document.getElementById("cantico-final").value = dados.canticoFinal || "";
                     document.getElementById("leitura-semana").value = dados.leituraSemana || "";
                     document.getElementById("presidente").value = dados.presidente || "";
                     document.getElementById("oracao-inicial").value = dados.oracaoInicial || "";
@@ -43,6 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.getElementById("tesouros-joias-designado").value = dados.tesouros?.joias10min?.designado || dados.tesouros?.joias10min?.designated || "";
                     document.getElementById("leitura-principal").value = dados.tesouros?.leituraBiblia_salaPrincipal || "";
                     document.getElementById("leitura-sala-b").value = dados.tesouros?.leituraBiblia_salaB || "";
+                    document.getElementById("estudo-dirigente").value = dados.estudoDirigente || "";
+                    document.getElementById("estudo-leitor").value = dados.estudoLeitor || "";
 
                     // Preenche dinamicamente as partes do Ministério
                     if (dados.facaSeuMelhor && Array.isArray(dados.facaSeuMelhor)) {
@@ -59,14 +65,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
 
                     // Preenche dinamicamente as partes da Vida Cristã
-                    if (dados.nossaVida && Array.isArray(dados.nossaVida)) {
-                        dados.nossaVida.forEach(item => {
-                            btnAddVida.click();
+                    if (dados.partesVida && Array.isArray(dados.partesVida)) {
+                        dados.partesVida.forEach((item) => {
+                            btnAddVida.click(); // Cria a estrutura do bloco
                             const ultimoBloco = containerVida.lastElementChild;
-                            
                             ultimoBloco.querySelector(".vida-parte").value = item.parte || "";
-                            ultimoBloco.querySelector(".vida-dirigente").value = item.dirigente || item.designado || "";
-                            ultimoBloco.querySelector(".vida-leitor").value = item.leitor || "";
+                            ultimoBloco.querySelector(".vida-orador").value = item.orador || "";
                         });
                     }
                     
@@ -78,63 +82,86 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch(error => console.error("Erro ao carregar dados para o ADM:", error));
     });
 
-    // --- FUNÇÃO: ADICIONAR PARTE DO MINISTÉRIO ---
+    // --- FUNÇÃO: ELEMENTOS DINÂMICOS (MINISTÉRIO REORGANIZADO) ---
     btnAddMinisterio.addEventListener("click", () => {
         const div = document.createElement("div");
         div.className = "card-dinamico bloco-ministerio-item";
+        div.style = "border-left: 4px solid #f1c40f; padding: 15px; margin-bottom: 20px; background: #fffdf3; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);";
+        
         div.innerHTML = `
-            <button type="button" class="btn-remover-parte" onclick="this.parentElement.remove()">❌ Remover</button>
-            <div class="form-group">
-                <label>Título/Descrição da Parte:</label>
-                <input type="text" class="min-parte" placeholder="Ex: 4. Inicie Conversas (4 min.)" required>
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label style="font-weight: bold;">Título/Descrição da Parte:</label>
+                <input type="text" class="min-parte" placeholder="Ex: 4. Inicie Conversas (4 min.)" required style="width: 100%; box-sizing: border-box;">
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Salão Principal - Estudante:</label>
-                    <input type="text" class="min-p-estudante" placeholder="Estudante" required>
-                </div>
-                <div class="form-group">
-                    <label>Salão Principal - Ajudante:</label>
-                    <input type="text" class="min-p-ajudante" placeholder="Ajudante (se houver)">
-                </div>
+            
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label>Salão Principal — Estudante:</label>
+                <input type="text" class="min-p-estudante" placeholder="Nome do estudante" required style="width: 100%; box-sizing: border-box;">
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Sala B - Estudante:</label>
-                    <input type="text" class="min-b-estudante" placeholder="Estudante (se houver)">
-                </div>
-                <div class="form-group">
-                    <label>Sala B - Ajudante:</label>
-                    <input type="text" class="min-b-ajudante" placeholder="Ajudante (se houver)">
-                </div>
+            
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label>Salão Principal — Ajudante:</label>
+                <input type="text" class="min-p-ajudante" placeholder="Ajudante (se houver)" style="width: 100%; box-sizing: border-box;">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label>Sala B — Estudante:</label>
+                <input type="text" class="min-b-estudante" placeholder="Estudante (se houver)" style="width: 100%; box-sizing: border-box;">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Sala B — Ajudante:</label>
+                <input type="text" class="min-b-ajudante" placeholder="Ajudante (se houver)" style="width: 100%; box-sizing: border-box;">
+            </div>
+            
+            <div style="text-align: right;">
+                <button type="button" class="btn-remover-parte" onclick="this.parentElement.parentElement.remove()" style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                    ❌ Remover Esta Parte
+                </button>
             </div>
         `;
         containerMinisterio.appendChild(div);
     });
 
-    // --- FUNÇÃO: ADICIONAR PARTE DA VIDA CRISTÃ ---
+    // --- FUNÇÃO: ELEMENTOS DINÂMICOS DA VIDA CRISTÃ (COM ORADOR E SEM LEITOR) ---
     btnAddVida.addEventListener("click", () => {
         const div = document.createElement("div");
         div.className = "card-dinamico bloco-vida-item";
+        div.style = "border-left: 4px solid #e67e22; padding: 15px; margin-bottom: 20px; background: #fffcf9; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);";
+        
         div.innerHTML = `
-            <button type="button" class="btn-remover-parte" onclick="this.parentElement.remove()">❌ Remover</button>
-            <div class="form-group">
-                <label>Título/Descrição da Parte:</label>
-                <input type="text" class="vida-parte" placeholder="Ex: Necessidades da Congregação (15 min.)" required>
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label style="font-weight: bold;">Título/Descrição da Parte:</label>
+                <input type="text" class="vida-parte" placeholder="Ex: Necessidades da Congregação (15 min.)" required style="width: 100%; box-sizing: border-box;">
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Dirigente / Designado:</label>
-                    <input type="text" class="vida-dirigente" placeholder="Nome do irmão" required>
-                </div>
-                <div class="form-group">
-                    <label>Leitor (Se houver):</label>
-                    <input type="text" class="vida-leitor" placeholder="Nome do leitor (se houver)">
-                </div>
+            
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Orador:</label>
+                <input type="text" class="vida-orador" placeholder="Nome do orador designado" required style="width: 100%; box-sizing: border-box;">
+            </div>
+            
+            <div style="text-align: right;">
+                <button type="button" class="btn-remover-parte" onclick="this.parentElement.parentElement.remove()" style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                    ❌ Remover Esta Parte
+                </button>
             </div>
         `;
         containerVida.appendChild(div);
     });
+
+    // --- FUNÇÃO: ATALHO PARA VISITA DO SUPERINTENDENTE ---
+    if (btnAddVisitaSuper) {
+        btnAddVisitaSuper.addEventListener("click", () => {
+            btnAddVida.click();
+            const ultimoBloco = containerVida.lastElementChild;
+            
+            ultimoBloco.querySelector(".vida-parte").value = "Discurso do Superintendente de Circuito (30 min.)";
+            ultimoBloco.querySelector(".vida-orador").value = "Superintendente de Circuito";
+            
+            ultimoBloco.style.borderLeft = "4px solid #9b59b6";
+            ultimoBloco.style.background = "#fcf9fe";
+        });
+    }
 
     // --- 3. LÓGICA DE CAPTURA E ENVIO DOS DADOS (SUBMIT) ---
     formReuniao.addEventListener("submit", (e) => {
@@ -154,22 +181,25 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        const listaVida = [];
-        const itensVida = document.querySelectorAll(".bloco-vida-item");
-        itensVida.forEach((item) => {
-            listaVida.push({
-                parte: item.querySelector(".vida-parte").value,
-                dirigente: item.querySelector(".vida-dirigente").value || "",
-                leitor: item.querySelector(".vida-leitor").value || ""
+        const partesVidaDinamicas = [];
+        document.querySelectorAll(".bloco-vida-item").forEach((bloco) => {
+            partesVidaDinamicas.push({
+                parte: bloco.querySelector(".vida-parte").value,
+                orador: bloco.querySelector(".vida-orador").value
             });
         });
 
         const dadosReuniao = {
             data: dataId,
+            canticoInicial: document.getElementById("cantico-inicial").value, 
+            canticoFinal: document.getElementById("cantico-final").value,
             leituraSemana: document.getElementById("leitura-semana").value,
             presidente: document.getElementById("presidente").value,
             oracaoInicial: document.getElementById("oracao-inicial").value,
             conselheiroSalaB: document.getElementById("conselheiro-sala-b").value || "",
+            estudoDirigente: document.getElementById("estudo-dirigente").value || "",
+            estudoLeitor: document.getElementById("estudo-leitor").value || "",
+
             tesouros: {
                 discurso10min: {
                     tema: document.getElementById("tesouros-discurso-tema").value,
@@ -183,11 +213,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 leituraBiblia_salaB: document.getElementById("leitura-sala-b").value || ""
             },
             facaSeuMelhor: listaMinisterio,
-            nossaVida: listaVida,
+            partesVida: partesVidaDinamicas,
             oracaoFinal: document.getElementById("oracao-final").value
         };
 
-// Substitua a parte final do set().then().catch() por essa estrutura:
         db.collection("reunioes_meio_semana").doc(dataId).set(dadosReuniao)
             .then(() => {
                 // Exibe o modal customizado de Sucesso
@@ -211,6 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             });
     });
+
     // --- FUNÇÃO PARA EXIBIR E FECHAR O MODAL ---
     const modal = document.getElementById("modal-alerta");
     const btnFecharModal = document.getElementById("btn-fechar-modal");
@@ -218,17 +248,17 @@ document.addEventListener("DOMContentLoaded", () => {
     function mostrarAlertaCustomizado(icone, titulo, mensagem) {
         document.getElementById("modal-titulo").innerText = titulo;
         document.getElementById("modal-mensagem").innerText = mensagem;
-        // Altera o emoji dinamicamente (🎉 para sucesso, ❌ para erro)
         modal.querySelector(".modal-icone").innerText = icone; 
         
         modal.classList.add("mostrar");
     }
 
     // Fecha o modal ao clicar no botão "Entendido"
-    btnFecharModal.addEventListener("click", () => {
-        modal.classList.remove("mostrar");
-    });
-
+    if (btnFecharModal) {
+        btnFecharModal.addEventListener("click", () => {
+            modal.classList.remove("mostrar");
+        });
+    }
 
     // --- CÓDIGO DE ACESSIBILIDADE (ZOOM) PARA O ADM ---
     const btnDiminuir = document.getElementById("btn-diminuir");
@@ -273,6 +303,4 @@ document.addEventListener("DOMContentLoaded", () => {
             atualizarZoom();
         });
     }
-// FIM DO CÓDIGO DE ZOOM
 });
-

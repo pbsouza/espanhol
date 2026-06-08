@@ -24,6 +24,10 @@
                     <input type="date" id="id-semana" required>
                 </div>
                 <div class="form-group">
+                    <label for="cantico-inicial">Cântico Inicial (Número):</label>
+                    <input type="number" id="cantico-inicial" placeholder="Ex: 5" required>
+                </div>
+                <div class="form-group">
                     <label for="leitura-semana">Leitura da Semana:</label>
                     <input type="text" id="leitura-semana" placeholder="Ex: ISAÍAS 60-61" required>
                 </div>
@@ -85,20 +89,52 @@
                 </button>
             </fieldset>
 
+            <!-- SEÇÃO REORGANIZADA: NOSSA VIDA CRISTÃ -->
             <fieldset>
                 <legend>🐑 Nossa Vida Cristã</legend>
-                <p class="adm-ajuda">Adicione as partes locais, necessidades da congregação ou Estudo Bíblico</p>
                 
+                <p class="adm-ajuda">Adicione as partes locais, necessidades da congregação ou vídeos da semana.</p>
+
                 <div id="container-vida-partes"></div>
                 
-                <button type="button" id="btn-add-vida" class="btn-adicionar-dinamico">
-                    ➕ Adicionar Parte da Vida Cristã
-                </button>
+                <div style="margin: 20px 0; display: block;">
+                    
+                    <button type="button" id="btn-add-vida" class="btn-adicionar-dinamico" style="width: 100%; margin-bottom: 12px; box-sizing: border-box;">
+                        ➕ Adicionar Nova Parte na Vida Cristã
+                    </button>
+
+                    <div style="background: #f4ecf7; padding: 12px; border-radius: 6px; border: 1px dashed #9b59b6; box-sizing: border-box;">
+                        <button type="button" id="btn-add-visita-super" class="btn-adicionar-dinamico" style="background-color: #9b59b6; margin: 0; width: 100%; box-sizing: border-box;">
+                            👔 Ativar: Visita do Superintendente de Circuito
+                        </button>
+                    </div>
+                    
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #ccc; margin: 20px 0;">
+
+                <hr style="border: 0; border-top: 1px solid #ccc; margin: 20px 0;">
+
+                <div class="bloco-estudo-fixo" style="border-left: 4px solid #00a8ff; padding: 15px; margin-bottom: 0; background: #f0f8ff; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <h4 style="margin-top: 0; margin-bottom: 10px; color: #00a8ff;">📖 Estudo Bíblico da Congregação</h4>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label for="estudo-dirigente">Dirigente:</label>
+                        <input type="text" id="estudo-dirigente" placeholder="Nome do dirigente (Deixe vazio se for visita)" style="width: 100%; box-sizing: border-box;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="estudo-leitor">Leitor:</label>
+                        <input type="text" id="estudo-leitor" placeholder="Nome do leitor (Deixe vazio se for visita)" style="width: 100%; box-sizing: border-box;">
+                    </div>
+                </div>
             </fieldset>
 
 
             <fieldset>
                 <legend>🏁 Encerramento</legend>
+                <div class="form-group">
+                    <label for="cantico-final">Cântico Final (Número):</label>
+                    <input type="number" id="cantico-final" placeholder="Ex: 143" required>
+                </div>
                 <div class="form-group">
                     <label for="oracao-final">Oração Final:</label>
                     <input type="text" id="oracao-final" placeholder="Nome do irmão" required>
