@@ -201,9 +201,7 @@ function exibirTabelaReuniao(dados, dataId) {
   htmlMinisterio += `</div>`; 
 
   // 4. Bloco: Nossa Vida Cristã (Geração Dinâmica)
-let htmlVida = `
-  <div class="secao-bloco">
-  `<h3 class="secao-cabecalho bg-vida" style="border-top-left-radius: 8px; border-top-right-radius: 8px;">🐑 Nossa Vida Cristã</h3>`;
+let htmlVida = `<h3 class="secao-titulo vida-crista-cor">🐑 Nossa Vida Cristã</h3>`;
 
   // 1. Renderiza primeiro as partes variáveis (ex: Necessidades Locais)
   if (dados.partesVida && dados.partesVida.length > 0) {
