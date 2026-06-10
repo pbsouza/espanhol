@@ -12,16 +12,85 @@
     <header style="text-align: center; margin-bottom: 20px;">
         <h1>Nossa Vida e Ministério Cristão</h1>
     <div class="nav-container">
-        <button id="btn-anterior" class="btn-nav btn-anterior">⬅️ Semana Anterior</button>
-        <button id="btn-proxima" class="btn-nav btn-proxima">Próxima Semana ➡️</button>
+        <button id="btn-anterior" class="btn-nav btn-anterior"><< Anterior</button>
+        
+        <button id="btn-atual" class="btn-nav btn-atual">Semana Atual</button>
+        
+        <button id="btn-proxima" class="btn-nav btn-proxima">Próxima >></button>
     </div>
     </header>
 
     <main>
-        <!-- Container principal onde o JavaScript injetará os blocos coloridos -->
-        <div id="container-reuniao" class="reuniao-container">
-            <p style="text-align: center; color: #666;">Carregando programação da semana...</p>
+ <div class="reuniao-container">
+
+    <div class="secao-bloco" style="border-top: 4px solid #d1b2e0;">
+        <div class="secao-cabecalho" style="background-color: #d1b2e0; color: #000; display: flex; flex-direction: column; gap: 5px; align-items: flex-start;">
+            <div id="reuniao-semana" style="font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; width: 100%; margin-bottom: 5px; font-weight: bold;"></div>
+            <div style="font-size: 1.1rem; text-transform: capitalize; font-weight: bold;">
+                Base: <span id="reuniao-leitura"></span>
+            </div>
+            <div style="font-size: 1rem;">
+                👤 Presidente: <span id="reuniao-presidente"></span>
+            </div>
         </div>
+        <div style="padding: 12px 15px; background-color: #f1e5f5; display: flex; flex-direction: column; gap: 8px;">
+            <div><strong>🎵 Cântico Inicial:</strong> <span id="reuniao-cantico-inicial"></span></div>
+            <div><strong>Oração Inicial:</strong> <span id="reuniao-oracao-inicial"></span></div>
+            <div id="bloco-conselheiro-b"><strong>Conselheiro da Sala B:</strong> <span id="reuniao-conselheiro-b"></span></div>
+        </div>
+    </div>
+
+    <div class="secao-bloco">
+        <div class="secao-cabecalho bg-tesouros">💎 TESOUROS DA PALAVRA DE DEUS</div>
+        
+        <div class="parte-card">
+            <div class="col-descricao">1. <span id="tesouro-tema-1"></span></div>
+            <div class="col-salas">
+                <div class="sala-box sala-principal" id="tesouro-orador-1"></div>
+            </div>
+        </div>
+
+        <div class="parte-card">
+            <div class="col-descricao">2. Joias Espirituais: <span id="tesouro-tema-2"></span></div>
+            <div class="col-salas">
+                <div class="sala-box sala-principal" id="tesouro-orador-2"></div>
+            </div>
+        </div>
+
+        <div class="parte-card">
+            <div class="col-descricao">3. Leitura da Bíblia (4 min.)</div>
+            <div class="col-salas">
+                <div class="sala-box sala-principal"><strong>Salão Principal:</strong> <span id="leitura-principal"></span></div>
+                <div class="sala-box sala-b" id="leitura-b-box"><strong>Sala B:</strong> <span id="leitura-b"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="secao-bloco">
+        <div class="secao-cabecalho bg-ministerio">🌾 FAÇA SEU MELHOR NO MINISTÉRIO</div>
+        <div id="lista-partes-ministerio"></div>
+    </div>
+
+    <div class="secao-bloco">
+        <div class="secao-cabecalho bg-vida">🐑 NOSSA VIDA CRISTÃ</div>
+        <div id="lista-partes-vida"></div>
+
+        <div class="parte-card" style="border-top: 1px dashed #ccc; background-color: #f9f9f9; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+            <div class="col-salas">
+                <div class="sala-box sala-principal" style="border-left-color: #d1b2e0; display: flex; flex-direction: column; gap: 5px;">
+                    <div><strong>🎵 Cântico Final:</strong> <span id="reuniao-cantico-final"></span></div>
+                    <div><strong>Oração Final:</strong> <span id="reuniao-oracao-final"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="margin-top: 40px; padding: 40px 20px; text-align: center; color: #777; font-size: 0.85rem;">
+        <hr style="border: none; border-top: 1px solid #e0e0e0; margin-bottom: 20px;">
+        Quadro de Reuniões de Meio de Semana
+    </footer>
+
+</div>
     </main>
 
     <!-- Configuração do Firebase (Certifique-se de manter as suas credenciais aqui) -->

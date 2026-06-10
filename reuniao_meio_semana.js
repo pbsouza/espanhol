@@ -112,148 +112,126 @@ function atualizarBotoesNavegacao() {
 }
 
 function exibirTabelaReuniao(dados, dataId) {
-  const container = document.getElementById("container-reuniao");
-  if (!container) return;
+  // Variável para controlar se a Sala B foi usada nesta semana
+  let temSalaB = false;
 
-  container.innerHTML = "";
-
-  // Tratamento para exibir o dia e o mês por extenso
-  let dataTexto = "";
+  // 1. Preenchimento do Bloco de Informações Gerais
   if (dataId) {
-    const partes = dataId.split("-"); // Divide "2026-06-08" em ["2026", "06", "08"]
+    const partes = dataId.split("-");
     const dataObjeto = new Date(partes[0], partes[1] - 1, partes[2]);
+    const dataTexto = dataObjeto.toLocaleDateString("pt-BR", { day: "2-digit", month: "long" });
+    document.getElementById("reuniao-semana").textContent = `📅 Semana de ${dataTexto}`;
+  }
+  
+  document.getElementById("reuniao-leitura").textContent = (dados.leituraSemana || 'Semana').toLowerCase();
+  document.getElementById("reuniao-presidente").textContent = dados.presidente || '';
+  document.getElementById("reuniao-cantico-inicial").textContent = dados.canticoInicial || 'Não definido';
+  document.getElementById("reuniao-oracao-inicial").textContent = dados.oracaoInicial || 'Não definida';
+  document.getElementById("reuniao-conselheiro-b").textContent = dados.conselheiroSalaB || '';
+
+  // 2. Preenchimento do Bloco Fixo: Tesouros
+  if (dados.tesouros) {
+    document.getElementById("tesouro-tema-1").textContent = dados.tesouros.discurso10min.tema || '';
+    document.getElementById("tesouro-orador-1").textContent = dados.tesouros.discurso10min.designated || dados.tesouros.discurso10min.designado || '';
     
-    // Formata para: "08 de junho"
-    dataTexto = dataObjeto.toLocaleDateString("pt-BR", { day: "2-digit", month: "long" }) + " — ";
+    document.getElementById("tesouro-tema-2").textContent = dados.tesouros.joias10min.tema || '';
+    document.getElementById("tesouro-orador-2").textContent = dados.tesouros.joias10min.designated || dados.tesouros.joias10min.designado || '';
+    
+    document.getElementById("leitura-principal").textContent = dados.tesouros.leituraBiblia_salaPrincipal || '';
+    
+    // Verifica se há leitor na Sala B
+    const leitorB = dados.tesouros.leituraBiblia_salaB;
+    const caixaLeituraB = document.getElementById("leitura-b-box");
+    if (leitorB && leitorB.trim() !== "") {
+      document.getElementById("leitura-b").textContent = leitorB;
+      caixaLeituraB.style.display = "block";
+      temSalaB = true;
+    } else {
+      caixaLeituraB.style.display = "none";
+    }
   }
 
-  // 1. Bloco de Informações Gerais (Data no topo, Leitura e Presidente abaixo)
-  let htmlGeral = `
-    <div class="secao-bloco" style="border-top: 4px solid #d1b2e0;">
-      <div class="secao-cabecalho" style="background-color: #d1b2e0; color: #000; display: flex; flex-direction: column; gap: 5px; align-items: flex-start;">
-        <!-- Data centralizada e em letras maiúsculas -->
-        <div style="font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; width: 100%; margin-bottom: 5px;">
-          📅 Semana de ${dataTexto.replace(" — ", "")}
-        </div>
-          <div style="font-size: 1.1rem; text-transform: capitalize; font-weight: bold;">📖 ${(dados.leituraSemana || 'Semana').toLowerCase()}</div>
-        <div style="font-size: 1rem;">👤 Presidente: ${dados.presidente || ''}</div>
-      </div>
-      <div style="padding: 12px 15px; background-color: #f1e5f5; display: flex; flex-direction: column; gap: 8px;">
-        <div><strong>🎵 Cântico Inicial:</strong> ${dados.canticoInicial || 'Não definido'}</div>
-        <div><strong>Oração Inicial:</strong> ${dados.oracaoInicial || 'Não definida'}</div>
-        <div><strong>Conselheiro da Sala B:</strong> ${dados.conselheiroSalaB || ''}</div>
-      </div>
-    </div>
-  `;
+  // 3. Preenchimento Dinâmico: Faça Seu Melhor no Ministério
+  const containerMinisterio = document.getElementById("lista-partes-ministerio");
+  if (containerMinisterio) {
+    let htmlMin = "";
+    if (dados.facaSeuMelhor && Array.isArray(dados.facaSeuMelhor)) {
+      dados.facaSeuMelhor.forEach((item) => {
+        // Verifica se há estudantes escalados na Sala B para esta parte específica
+        const temEstudanteB = item.salaB_estudante && item.salaB_estudante.trim() !== "";
+        if (temEstudanteB) {
+          temSalaB = true;
+        }
 
-  // 2. Bloco: Tesouros da Palavra de Deus (Sem horário)
-  let htmlTesouros = `
-    <div class="secao-bloco">
-      <div class="secao-cabecalho bg-tesouros">💎 TESOUROS DA PALAVRA DE DEUS</div>
-      
-      <div class="parte-card">
-        <div class="col-descricao">1. ${dados.tesouros.discurso10min.tema}</div>
-        <div class="col-salas">
-          <div class="sala-box sala-principal">${dados.tesouros.discurso10min.designated || dados.tesouros.discurso10min.designado}</div>
-        </div>
-      </div>
-
-      <div class="parte-card">
-        <div class="col-descricao">2. Joias Espirituais: ${dados.tesouros.joias10min.tema}</div>
-        <div class="col-salas">
-          <div class="sala-box sala-principal">${dados.tesouros.joias10min.designated || dados.tesouros.joias10min.designado}</div>
-        </div>
-      </div>
-
-      <div class="parte-card">
-        <div class="col-descricao">3. Leitura da Bíblia (4 min.)</div>
-        <div class="col-salas">
-          <div class="sala-box sala-principal"><strong>Salão Principal:</strong> ${dados.tesouros.leituraBiblia_salaPrincipal}</div>
-          <div class="sala-box sala-b"><strong>Sala B:</strong> ${dados.tesouros.leituraBiblia_salaB}</div>
-        </div>
-      </div>
-    </div>
-  `;
-
-  // 3. Bloco: Faça Seu Melhor no Ministério (Geração Dinâmica)
-  let htmlMinisterio = `
-    <div class="secao-bloco">
-      <div class="secao-cabecalho bg-ministerio">🌾 FAÇA SEU MELHOR NO MINISTÉRIO</div>
-  `;
-
-  if (dados.facaSeuMelhor && Array.isArray(dados.facaSeuMelhor)) {
-    dados.facaSeuMelhor.forEach((item) => {
-      htmlMinisterio += `
-        <div class="parte-card">
-          <div class="col-descricao">${item.parte}</div>
-          <div class="col-salas">
-            <div class="sala-box sala-principal">
-              <strong>Salão Principal:</strong> ${item.principal_estudante} e ${item.principal_ajudante}
-            </div>
-            <div class="sala-box sala-b">
-              <strong>Sala B:</strong> ${item.salaB_estudante} e ${item.salaB_ajudante}
-            </div>
-          </div>
-        </div>
-      `;
-    });
-  }
-  htmlMinisterio += `</div>`; 
-  // 4. Bloco: Nossa Vida Cristã (Geração Dinâmica e Padronizada)
-  // Corrigido para alinhar o título em caixa alta com fundo de cor sólida
-  let htmlVida = `
-    <div class="secao-bloco">
-      <div class="secao-cabecalho bg-vida">🐑 NOSSA VIDA CRISTÃ</div>
-  `;
-
-  // 1. Renderiza primeiro as partes variáveis (ex: Necessidades Locais)
-  if (dados.partesVida && dados.partesVida.length > 0) {
-      dados.partesVida.forEach((item) => {
-          htmlVida += `
-              <div class="parte-card">
-                <div class="parte-titulo"><strong>${item.parte}</strong></div>
-                <div class="col-salas">
-                  <div class="sala-box sala-principal">
-                    <strong>Orador:</strong> ${item.orador}
-                  </div>
-                </div>
-              </div>
-          `;
-      });
-  }
-
-  // 2. O ESTUDO BÍBLICO FIXO (SÓ APARECE SE FOR PREENCHIDO!)
-  // Se 'dados.estudoDirigente' estiver vazio ou não existir, o sistema pula esse bloco
-  if (dados.estudoDirigente && dados.estudoDirigente.trim() !== "") {
-      htmlVida += `
-          <div class="parte-card" style="border-left: 4px solid #00a8ff; background-color: #f7fbfe;">
-            <div class="parte-titulo"><strong>Estudo Bíblico de Congregação</strong></div>
+        htmlMin += `
+          <div class="parte-card">
+            <div class="col-descricao">${item.parte}</div>
             <div class="col-salas">
               <div class="sala-box sala-principal">
-                <strong>Dirigente:</strong> ${dados.estudoDirigente} <br>
-                <strong>Leitor:</strong> ${dados.estudoLeitor || 'Não designado'}
+                <strong>Salão Principal:</strong> ${item.principal_estudante} ${item.principal_ajudante ? 'e ' + item.principal_ajudante : ''}
+              </div>
+              <div class="sala-box sala-b" style="display: ${temEstudanteB ? 'block' : 'none'};">
+                <strong>Sala B:</strong> ${item.salaB_estudante} ${item.salaB_ajudante ? 'e ' + item.salaB_ajudante : ''}
               </div>
             </div>
           </div>
-      `;
+        `;
+      });
+    }
+    containerMinisterio.innerHTML = htmlMin;
   }
 
-  // 3. Renderiza o Cântico Final e Oração Final no fechamento da seção
-  // Adicionei estilos para o fundo cinza e a borda arredondada na base
-  htmlVida += `
-      <div class="parte-card" style="border-top: 1px dashed #ccc; margin-top: 10px; padding-top: 10px; background-color: #f9f9f9; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
-        <div class="col-salas">
-          <div class="sala-box sala-principal" style="border-left-color: #d1b2e0; display: flex; flex-direction: column; gap: 5px;">
-            <div><strong>🎵 Cântico Final:</strong> ${dados.canticoFinal || 'Não definido'}</div>
-            <div><strong>Oração Final:</strong> ${dados.oracaoFinal || 'Não definida'}</div>
+  // 4. Preenchimento Misto: Nossa Vida Cristã
+  const containerVida = document.getElementById("lista-partes-vida");
+  if (containerVida) {
+    let htmlVid = "";
+
+    if (dados.partesVida && dados.partesVida.length > 0) {
+      dados.partesVida.forEach((item) => {
+        htmlVid += `
+          <div class="parte-card">
+            <div class="col-descricao">${item.parte}</div>
+            <div class="col-salas">
+              <div class="sala-box sala-principal"><strong>Orador:</strong> ${item.orador}</div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    if (dados.estudoDirigente && dados.estudoDirigente.trim() !== "") {
+      htmlVid += `
+        <div class="parte-card" style="border-left: 4px solid #00a8ff; background-color: #f7fbfe;">
+          <div class="col-descricao">Estudo Bíblico de Congregação</div>
+          <div class="col-salas">
+            <div class="sala-box sala-principal" style="border-left-color: #00a8ff;">
+              <strong>Dirigente:</strong> ${dados.estudoDirigente} <br>
+              <strong>Leitor:</strong> ${dados.estudoLeitor || 'Não designado'}
+            </div>
           </div>
         </div>
-      </div>
-    </div> `;
+      `;
+    }
 
-  htmlVida += `</div>`;
+    containerVida.innerHTML = htmlVid;
+  }
 
-  
+  // 5. Preenchimento do Encerramento Fixo
+  document.getElementById("reuniao-cantico-final").textContent = dados.canticoFinal || 'Não definido';
+  document.getElementById("reuniao-oracao-final").textContent = dados.oracaoFinal || 'Não definida';
+
+  // 6. Controle do Bloco do Conselheiro da Sala B no topo
+  const blocoConselheiro = document.getElementById("bloco-conselheiro-b");
+  if (blocoConselheiro) {
+    // Só exibe o conselheiro se a Sala B tiver sido usada em alguma parte da semana
+    if (temSalaB && dados.conselheiroSalaB && dados.conselheiroSalaB.trim() !== "") {
+      blocoConselheiro.style.display = "block";
+    } else {
+      blocoConselheiro.style.display = "none";
+    }
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const btnDiminuir = document.getElementById("btn-diminuir");
   const btnNormal = document.getElementById("btn-normal");
@@ -326,54 +304,37 @@ function formatarDataItem(data) {
 }
 
 function configurarNavegacao() {
-
-  const btnAnterior =
-    document.getElementById("btn-anterior");
-
-  const btnProxima =
-    document.getElementById("btn-proxima");
+  const btnAnterior = document.getElementById("btn-anterior");
+  const btnProxima = document.getElementById("btn-proxima");
+  const btnAtual = document.getElementById("btn-atual"); // Captura o novo botão
 
   if (btnAnterior) {
-
-    btnAnterior.addEventListener(
-      "click",
-      () => {
-
-        if (indiceAtual > 0) {
-
-          indiceAtual--;
-
-          carregarReuniaoAtual();
-
-        }
-
+    btnAnterior.addEventListener("click", () => {
+      if (indiceAtual > 0) {
+        indiceAtual--;
+        carregarReuniaoAtual();
       }
-    );
-
+    });
   }
 
   if (btnProxima) {
-
-    btnProxima.addEventListener(
-      "click",
-      () => {
-
-        if (
-          indiceAtual <
-          reunioes.length - 1
-        ) {
-
-          indiceAtual++;
-
-          carregarReuniaoAtual();
-
-        }
-
+    btnProxima.addEventListener("click", () => {
+      if (indiceAtual < reunioes.length - 1) {
+        indiceAtual++;
+        carregarReuniaoAtual();
       }
-    );
-
+    });
   }
 
+  // Lógica do novo botão "Semana Atual"
+  if (btnAtual) {
+    btnAtual.addEventListener("click", () => {
+      // Executa a função que varre o array e descobre o índice da semana atual
+      determinarIndiceInicial(); 
+      // Atualiza a tela com a reunião correta
+      carregarReuniaoAtual();
+    });
+  }
 }
 
 document.addEventListener(
