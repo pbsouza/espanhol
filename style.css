@@ -836,3 +836,24 @@ body.zoom-minus-3 input, body.zoom-minus-3 label, body.zoom-minus-3 legend, body
 body[class*="zoom-plus-"] .form-group {
     margin-bottom: 20px;
 }
+
+/* ============================================================
+   RESPONSIVIDADE: NAVEGAÇÃO EM TELAS MUITO ESTREITAS OR ZOOM ALTO
+   ============================================================ */
+
+/* Quando a tela for menor que 480px (ou o zoom espremer o espaço) */
+@media (max-width: 480px) {
+    .nav-container {
+        display: flex;
+        flex-direction: column; /* Alinha os botões na vertical */
+        gap: 10px;              /* Cria um espaçamento idêntico entre eles */
+        padding: 0 15px;        /* Evita que eles batam nas bordas da tela */
+    }
+
+    .nav-container .btn-nav {
+        width: 100%;            /* Faz cada botão ocupar a largura inteira */
+        box-sizing: border-box; /* Garante que as bordas não passem do limite */
+        text-align: center;     /* Centraliza os textos e emojis */
+        padding: 12px;          /* Deixa o botão mais alto e fácil de clicar no celular */
+    }
+}

@@ -3,72 +3,94 @@ let indiceAtual = 0;
 
 // reuniao_meio_semana.js
 async function carregarListaReunioes() {
-
   try {
+    // 1. Descobrir a data de hoje e mover para a segunda-feira da semana atual
+    const hoje = new Date();
+    const diaDaSemana = hoje.getDay(); 
+    const diferencaParaSegunda = diaDaSemana === 0 ? -6 : 1 - diaDaSemana;
+    
+    const segundaAtual = new Date(hoje);
+    segundaAtual.setDate(hoje.getDate() + diferencaParaSegunda);
+    
+    // 2. Calcular os limites: 5 semanas para trás (35 dias) e 4 semanas para frente (28 dias)
+    const cincoSemanasAtras = new Date(segundaAtual);
+    cincoSemanasAtras.setDate(segundaAtual.getDate() - 35);
+    
+    const quatroSemanasFrente = new Date(segundaAtual);
+    quatroSemanasFrente.setDate(segundaAtual.getDate() + 28);
+    
+    // Converter para string no formato YYYY-MM-DD para filtrar os IDs dos documentos
+    const chaveInicio = formatarDataItem(cincoSemanasAtras);
+    const chaveFim = formatarDataItem(quatroSemanasFrente);
 
+    console.log(`Buscando janela de reuniões entre: ${chaveInicio} e ${chaveFim}`);
+
+    // 3. Consulta ao Firestore filtrando apenas o intervalo de 10 semanas (SDK v8 / Web antigo)
     const snapshot = await db
       .collection("reunioes_meio_semana")
-      .orderBy("data")
+      .where("__name__", ">=", chaveInicio)
+      .where("__name__", "<=", chaveFim)
       .get();
 
     reunioes = [];
 
     snapshot.forEach((doc) => {
-
       reunioes.push({
         id: doc.id,
         ...doc.data()
       });
-
     });
 
+    // Garante que a lista fique em ordem cronológica (caso o Firestore mude a ordem física)
+    reunioes.sort((a, b) => a.id.localeCompare(b.id));
+
     if (reunioes.length === 0) {
-
-      console.log("Nenhuma reunião encontrada.");
+      console.log("Nenhuma reunião encontrada no período.");
+      exibirMensagemErro("Nenhuma reunião agendada para este período.");
       return;
-
     }
 
+    // 4. Rodar a blindagem para achar qual exibir
     determinarIndiceInicial();
 
+    // 5. Exibe na tela
     carregarReuniaoAtual();
 
   } catch (error) {
-
-    console.error(
-      "Erro ao carregar reuniões:",
-      error
-    );
-
+    console.error("Erro ao carregar reuniões:", error);
+    exibirMensagemErro("Erro ao conectar com o servidor.");
   }
-
 }
 
 function determinarIndiceInicial() {
-
-  const hoje = new Date();
-
-  const hojeTexto = formatarDataItem(hoje);
-
-  indiceAtual = 0;
-
-  for (let i = 0; i < reunioes.length; i++) {
-
-    if (reunioes[i].id >= hojeTexto) {
-
-      indiceAtual = i;
-      return;
-
-    }
-
+  // Se o banco estiver bizarramente vazio, zera o índice por segurança
+  if (reunioes.length === 0) {
+    indiceAtual = 0;
+    return;
   }
 
-  indiceAtual = reunioes.length - 1;
+  const hoje = new Date();
+  const hojeTexto = formatarDataItem(hoje);
 
+  indiceAtual = -1;
+
+  // 1. Tenta encontrar a primeira semana que seja igual ou maior que a data de hoje
+  for (let i = 0; i < reunioes.length; i++) {
+    if (reunioes[i].id >= hojeTexto) {
+      indiceAtual = i;
+      break; // Achou a semana correta ou a mais próxima no futuro, interrompe o loop
+    }
+  }
+
+  // 2. SISTEMA DE DEFESA (Se o loop acima não encontrar nada)
+  // Se não houver nenhuma semana futura ou atual (ex: registros incompletos),
+  // ele pega o último registro disponível do passado para não quebrar a tela.
+  if (indiceAtual === -1) {
+    indiceAtual = reunioes.length - 1;
+  }
 }
 
 function carregarReuniaoAtual() {
-
   if (
     indiceAtual < 0 ||
     indiceAtual >= reunioes.length
@@ -84,31 +106,19 @@ function carregarReuniaoAtual() {
   );
 
   atualizarBotoesNavegacao();
-
 }
 
 function atualizarBotoesNavegacao() {
-
-  const btnAnterior =
-    document.getElementById("btn-anterior");
-
-  const btnProxima =
-    document.getElementById("btn-proxima");
+  const btnAnterior = document.getElementById("btn-anterior");
+  const btnProxima = document.getElementById("btn-proxima");
 
   if (btnAnterior) {
-
-    btnAnterior.disabled =
-      indiceAtual === 0;
-
+    btnAnterior.disabled = indiceAtual === 0;
   }
 
   if (btnProxima) {
-
-    btnProxima.disabled =
-      indiceAtual === reunioes.length - 1;
-
+    btnProxima.disabled = indiceAtual === reunioes.length - 1;
   }
-
 }
 
 function exibirTabelaReuniao(dados, dataId) {
@@ -232,38 +242,42 @@ function exibirTabelaReuniao(dados, dataId) {
   }
 }
 
+// Função auxiliar de proteção para o layout caso o banco falhe
+function exibirMensagemErro(mensagem) {
+  const containerGeral = document.getElementById("lista-partes-ministerio");
+  if (containerGeral) {
+    containerGeral.innerHTML = `
+      <div style="border: 2px solid #ff4d4d; padding: 20px; text-align: center; background-color: #ffe6e6; border-radius: 8px; margin: 20px 0;">
+        <span style="font-size: 1.1rem; font-weight: bold; color: #cc0000;">⚠️ ${mensagem}</span>
+      </div>
+    `;
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const btnDiminuir = document.getElementById("btn-diminuir");
   const btnNormal = document.getElementById("btn-normal");
   const btnAumentar = document.getElementById("btn-aumentar");
 
-  // Nível 0 é o padrão. Vai de -3 (mínimo) até +3 (máximo)
   let nivelAtual = 0;
 
-  // Lista de todas as classes de zoom possíveis para facilitar a limpeza
   const todasAsClasses = [
     "zoom-minus-3", "zoom-minus-2", "zoom-minus-1",
     "zoom-plus-1", "zoom-plus-2", "zoom-plus-3"
   ];
 
-  // Função interna para aplicar a classe correta no body
   function atualizarZoom() {
-    // 1. Remove todas as classes de zoom existentes no body
     document.body.classList.remove(...todasAsClasses);
 
-    // 2. Aplica a classe correspondente ao nível atual
     if (nivelAtual > 0) {
       document.body.classList.add(`zoom-plus-${nivelAtual}`);
     } else if (nivelAtual < 0) {
-      document.body.classList.add(`zoom-minus-${Math.abs(nivelAtual)}`); // Math.abs transforma -1 em 1
+      document.body.classList.add(`zoom-minus-${Math.abs(nivelAtual)}`);
     }
-    
     console.log("Nível de Zoom Atual:", nivelAtual);
   }
 
   if (btnDiminuir && btnNormal && btnAumentar) {
-    
-    // Botão A+ (Aumentar até 3 vezes)
     btnAumentar.addEventListener("click", () => {
       if (nivelAtual < 3) {
         nivelAtual++;
@@ -271,7 +285,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Botão A- (Diminuir até 3 vezes)
     btnDiminuir.addEventListener("click", () => {
       if (nivelAtual > -3) {
         nivelAtual--;
@@ -279,7 +292,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Botão A (Reseta direto para o padrão)
     btnNormal.addEventListener("click", () => {
       nivelAtual = 0;
       atualizarZoom();
@@ -288,25 +300,16 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function formatarDataItem(data) {
-
   const ano = data.getFullYear();
-
-  const mes = String(
-    data.getMonth() + 1
-  ).padStart(2, "0");
-
-  const dia = String(
-    data.getDate()
-  ).padStart(2, "0");
-
+  const mes = String(data.getMonth() + 1).padStart(2, "0");
+  const dia = String(data.getDate()).padStart(2, "0");
   return `${ano}-${mes}-${dia}`;
-
 }
 
 function configurarNavegacao() {
   const btnAnterior = document.getElementById("btn-anterior");
   const btnProxima = document.getElementById("btn-proxima");
-  const btnAtual = document.getElementById("btn-atual"); // Captura o novo botão
+  const btnAtual = document.getElementById("btn-atual");
 
   if (btnAnterior) {
     btnAnterior.addEventListener("click", () => {
@@ -326,13 +329,10 @@ function configurarNavegacao() {
     });
   }
 
-  // Lógica do novo botão "Semana Atual"
   if (btnAtual) {
     btnAtual.addEventListener("click", () => {
-      // Executa a função que varre o array e descobre o índice da semana atual
-      determinarIndiceInicial(); 
-      // Atualiza a tela com a reunião correta
-      carregarReuniaoAtual();
+      // Recarrega a janela do Firebase e se posiciona novamente na semana corrente
+      carregarListaReunioes();
     });
   }
 }
@@ -340,10 +340,7 @@ function configurarNavegacao() {
 document.addEventListener(
   "DOMContentLoaded",
   async () => {
-
     configurarNavegacao();
-
     await carregarListaReunioes();
-
   }
 );
