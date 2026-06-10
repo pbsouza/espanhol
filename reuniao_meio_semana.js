@@ -120,7 +120,7 @@ function exibirTabelaReuniao(dados, dataId) {
     const partes = dataId.split("-");
     const dataObjeto = new Date(partes[0], partes[1] - 1, partes[2]);
     const dataTexto = dataObjeto.toLocaleDateString("pt-BR", { day: "2-digit", month: "long" });
-    document.getElementById("reuniao-semana").textContent = `📅 Semana de ${dataTexto}`;
+    document.getElementById("reuniao-semana").textContent = `${dataTexto}`;
   }
   
   document.getElementById("reuniao-leitura").textContent = (dados.leituraSemana || 'Semana').toLowerCase();
