@@ -18,12 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const formReuniao = document.getElementById("form-reuniao");
     const inputData = document.getElementById("id-semana");
 
-    // --- FUNÇÃO PRIVADA: ATUALIZA A NUMERAÇÃO DE FORMA SEQUENCIAL ---
+        // --- FUNÇÃO PRIVADA: ATUALIZA A NUMERAÇÃO DE FORMA SEQUENCIAL ---
     function atualizarNumeracaoFormulario() {
         // As 3 primeiras partes são fixas (Discurso, Joias, Leitura)
         let contador = 3;
 
-        // Varre e numera os itens do Ministério
+        // 1. Varre e numera os itens do Ministério
         const itensMinisterio = containerMinisterio.querySelectorAll(".bloco-ministerio-item");
         itensMinisterio.forEach((item) => {
             contador++;
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Varre e continua a numeração nos itens da Vida Cristã
+        // 2. Varre e continua a numeração nos itens da Vida Cristã
         const itensVida = containerVida.querySelectorAll(".bloco-vida-item");
         itensVida.forEach((item) => {
             contador++;
@@ -42,7 +42,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 label.innerText = `Parte ${contador} - Título/Descrição:`;
             }
         });
+
+        // 3. Incrementa e aplica o número no bloco fixo do Estudo Bíblico da Congregação
+        contador++;
+        const tituloEstudo = document.querySelector(".bloco-estudo-fixo h4");
+        if (tituloEstudo) {
+            tituloEstudo.innerText = `📖 ${contador}. Estudo Bíblico da Congregação`;
+        }
     }
+
 
     // --- FUNÇÃO: CARREGAR DADOS AO MUDAR A DATA ---
     inputData.addEventListener("change", () => {
