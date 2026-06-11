@@ -18,6 +18,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const formReuniao = document.getElementById("form-reuniao");
     const inputData = document.getElementById("id-semana");
 
+    // --- FUNÇÃO PRIVADA: ATUALIZA A NUMERAÇÃO DE FORMA SEQUENCIAL ---
+    function atualizarNumeracaoFormulario() {
+        // As 3 primeiras partes são fixas (Discurso, Joias, Leitura)
+        let contador = 3;
+
+        // Varre e numera os itens do Ministério
+        const itensMinisterio = containerMinisterio.querySelectorAll(".bloco-ministerio-item");
+        itensMinisterio.forEach((item) => {
+            contador++;
+            const label = item.querySelector(".label-num-dinamica");
+            if (label) {
+                label.innerText = `Parte ${contador} - Título/Descrição:`;
+            }
+        });
+
+        // Varre e continua a numeração nos itens da Vida Cristã
+        const itensVida = containerVida.querySelectorAll(".bloco-vida-item");
+        itensVida.forEach((item) => {
+            contador++;
+            const label = item.querySelector(".label-num-dinamica");
+            if (label) {
+                label.innerText = `Parte ${contador} - Título/Descrição:`;
+            }
+        });
+    }
+
     // --- FUNÇÃO: CARREGAR DADOS AO MUDAR A DATA ---
     inputData.addEventListener("change", () => {
         const dataId = inputData.value;
@@ -53,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     // Preenche dinamicamente as partes do Ministério
                     if (dados.facaSeuMelhor && Array.isArray(dados.facaSeuMelhor)) {
                         dados.facaSeuMelhor.forEach(item => {
-                            btnAddMinisterio.click(); 
+                            adicionarBlocoMinisterioDirect(); 
                             const ultimoBloco = containerMinisterio.lastElementChild;
                             
                             ultimoBloco.querySelector(".min-parte").value = item.parte || "";
@@ -67,13 +93,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     // Preenche dinamicamente as partes da Vida Cristã
                     if (dados.partesVida && Array.isArray(dados.partesVida)) {
                         dados.partesVida.forEach((item) => {
-                            btnAddVida.click(); // Cria a estrutura do bloco
+                            adicionarBlocoVidaDirect(); 
                             const ultimoBloco = containerVida.lastElementChild;
                             ultimoBloco.querySelector(".vida-parte").value = item.parte || "";
                             ultimoBloco.querySelector(".vida-orador").value = item.orador || "";
                         });
                     }
                     
+                    // Ajusta a numeração inicial dos dados vindos do Firebase
+                    atualizarNumeracaoFormulario();
                     console.log("Dados carregados para edição!");
                 } else {
                     console.log("Nova semana. Formulário pronto para preenchimento.");
@@ -82,16 +110,16 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch(error => console.error("Erro ao carregar dados para o ADM:", error));
     });
 
-    // --- FUNÇÃO: ELEMENTOS DINÂMICOS (MINISTÉRIO REORGANIZADO) ---
-    btnAddMinisterio.addEventListener("click", () => {
+    // Funções auxiliares internas para evitar disparo de cliques infinitos ao carregar dados
+    function adicionarBlocoMinisterioDirect() {
         const div = document.createElement("div");
         div.className = "card-dinamico bloco-ministerio-item";
         div.style = "border-left: 4px solid #f1c40f; padding: 15px; margin-bottom: 20px; background: #fffdf3; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);";
         
         div.innerHTML = `
             <div class="form-group" style="margin-bottom: 12px;">
-                <label style="font-weight: bold;">Título/Descrição da Parte:</label>
-                <input type="text" class="min-parte" placeholder="Ex: 4. Inicie Conversas (4 min.)" required style="width: 100%; box-sizing: border-box;">
+                <label class="label-num-dinamica" style="font-weight: bold; color: #b78a00;">Parte - Título/Descrição:</label>
+                <input type="text" class="min-parte" placeholder="Ex: Inicie Conversas (4 min.)" required style="width: 100%; box-sizing: border-box;">
             </div>
             
             <div class="form-group" style="margin-bottom: 12px;">
@@ -115,23 +143,29 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
             
             <div style="text-align: right;">
-                <button type="button" class="btn-remover-parte" onclick="this.parentElement.parentElement.remove()" style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                <button type="button" class="btn-remover-parte" style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">
                     ❌ Remover Esta Parte
                 </button>
             </div>
         `;
-        containerMinisterio.appendChild(div);
-    });
 
-    // --- FUNÇÃO: ELEMENTOS DINÂMICOS DA VIDA CRISTÃ (COM ORADOR E SEM LEITOR) ---
-    btnAddVida.addEventListener("click", () => {
+        // Lógica de escuta para o botão remover recalcular os números dinamicamente
+        div.querySelector(".btn-remover-parte").addEventListener("click", () => {
+            div.remove();
+            atualizarNumeracaoFormulario();
+        });
+
+        containerMinisterio.appendChild(div);
+    }
+
+    function adicionarBlocoVidaDirect() {
         const div = document.createElement("div");
         div.className = "card-dinamico bloco-vida-item";
         div.style = "border-left: 4px solid #e67e22; padding: 15px; margin-bottom: 20px; background: #fffcf9; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);";
         
         div.innerHTML = `
             <div class="form-group" style="margin-bottom: 12px;">
-                <label style="font-weight: bold;">Título/Descrição da Parte:</label>
+                <label class="label-num-dinamica" style="font-weight: bold; color: #d35400;">Parte - Título/Descrição:</label>
                 <input type="text" class="vida-parte" placeholder="Ex: Necessidades da Congregação (15 min.)" required style="width: 100%; box-sizing: border-box;">
             </div>
             
@@ -141,18 +175,37 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
             
             <div style="text-align: right;">
-                <button type="button" class="btn-remover-parte" onclick="this.parentElement.parentElement.remove()" style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                <button type="button" class="btn-remover-parte" style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">
                     ❌ Remover Esta Parte
                 </button>
             </div>
         `;
+
+        // Lógica de escuta para o botão remover recalcular os números dinamicamente
+        div.querySelector(".btn-remover-parte").addEventListener("click", () => {
+            div.remove();
+            atualizarNumeracaoFormulario();
+        });
+
         containerVida.appendChild(div);
+    }
+
+    // --- FUNÇÃO: ELEMENTOS DINÂMICOS (MINISTÉRIO REORGANIZADO VIA BOTÃO) ---
+    btnAddMinisterio.addEventListener("click", () => {
+        adicionarBlocoMinisterioDirect();
+        atualizarNumeracaoFormulario(); // Atualiza a contagem na hora
+    });
+
+    // --- FUNÇÃO: ELEMENTOS DINÂMICOS DA VIDA CRISTÃ VIA BOTÃO ---
+    btnAddVida.addEventListener("click", () => {
+        adicionarBlocoVidaDirect();
+        atualizarNumeracaoFormulario(); // Atualiza a contagem na hora
     });
 
     // --- FUNÇÃO: ATALHO PARA VISITA DO SUPERINTENDENTE ---
     if (btnAddVisitaSuper) {
         btnAddVisitaSuper.addEventListener("click", () => {
-            btnAddVida.click();
+            adicionarBlocoVidaDirect();
             const ultimoBloco = containerVida.lastElementChild;
             
             ultimoBloco.querySelector(".vida-parte").value = "Discurso do Superintendente de Circuito (30 min.)";
@@ -160,6 +213,8 @@ document.addEventListener("DOMContentLoaded", () => {
             
             ultimoBloco.style.borderLeft = "4px solid #9b59b6";
             ultimoBloco.style.background = "#fcf9fe";
+            
+            atualizarNumeracaoFormulario(); // Atualiza a contagem na hora
         });
     }
 
@@ -219,7 +274,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         db.collection("reunioes_meio_semana").doc(dataId).set(dadosReuniao)
             .then(() => {
-                // Exibe o modal customizado de Sucesso
                 mostrarAlertaCustomizado(
                     "✔", 
                     "Sucesso!", 
@@ -232,7 +286,6 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .catch((error) => {
                 console.error("Erro ao salvar os dados: ", error);
-                // Exibe o modal customizado de Erro
                 mostrarAlertaCustomizado(
                     "❌", 
                     "Ops, algo deu errado", 
@@ -253,7 +306,6 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.classList.add("mostrar");
     }
 
-    // Fecha o modal ao clicar no botão "Entendido"
     if (btnFecharModal) {
         btnFecharModal.addEventListener("click", () => {
             modal.classList.remove("mostrar");
