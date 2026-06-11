@@ -195,7 +195,7 @@ function exibirTabelaReuniao(dados, dataId) {
     containerMinisterio.innerHTML = htmlMin;
   }
 
-  // 4. Preenchimento Misto: Nossa Vida Cristã
+     // 4. Preenchimento Misto: Nossa Vida Cristã
   const containerVida = document.getElementById("lista-partes-vida");
   if (containerVida) {
     let htmlVid = "";
@@ -217,9 +217,12 @@ function exibirTabelaReuniao(dados, dataId) {
     }
 
     if (dados.estudoDirigente && dados.estudoDirigente.trim() !== "") {
+      // INCREMENTA AQUI TAMBÉM: Soma o Estudo Bíblico como a última parte sequencial
+      contadorPartes++;
+
       htmlVid += `
         <div class="parte-card" style="border-left: 4px solid #00a8ff; background-color: #f7fbfe;">
-          <div class="col-descricao">Estudo Bíblico de Congregação</div>
+          <div class="col-descricao">${contadorPartes}. Estudo Bíblico de Congregação</div>
           <div class="col-salas">
             <div class="sala-box sala-principal" style="border-left-color: #00a8ff;">
               <strong>Dirigente:</strong> ${dados.estudoDirigente} <br>
@@ -232,6 +235,7 @@ function exibirTabelaReuniao(dados, dataId) {
 
     containerVida.innerHTML = htmlVid;
   }
+
 
   // 5. Preenchimento do Encerramento Fixo
   document.getElementById("reuniao-cantico-final").textContent = dados.canticoFinal || 'Não definido';
