@@ -125,6 +125,9 @@ function exibirTabelaReuniao(dados, dataId) {
   // Variável para controlar se a Sala B foi usada nesta semana
   let temSalaB = false;
 
+  // Contador global de partes (as 3 primeiras já são fixas no bloco de Tesouros)
+  let contadorPartes = 3; 
+
   // 1. Preenchimento do Bloco de Informações Gerais
   if (dataId) {
     const partes = dataId.split("-");
@@ -149,7 +152,6 @@ function exibirTabelaReuniao(dados, dataId) {
     
     document.getElementById("leitura-principal").textContent = dados.tesouros.leituraBiblia_salaPrincipal || '';
     
-    // Verifica se há leitor na Sala B
     const leitorB = dados.tesouros.leituraBiblia_salaB;
     const caixaLeituraB = document.getElementById("leitura-b-box");
     if (leitorB && leitorB.trim() !== "") {
@@ -167,7 +169,9 @@ function exibirTabelaReuniao(dados, dataId) {
     let htmlMin = "";
     if (dados.facaSeuMelhor && Array.isArray(dados.facaSeuMelhor)) {
       dados.facaSeuMelhor.forEach((item) => {
-        // Verifica se há estudantes escalados na Sala B para esta parte específica
+        // Incrementa o contador para cada parte dinâmica do Ministério (começará em 4)
+        contadorPartes++;
+
         const temEstudanteB = item.salaB_estudante && item.salaB_estudante.trim() !== "";
         if (temEstudanteB) {
           temSalaB = true;
@@ -175,7 +179,7 @@ function exibirTabelaReuniao(dados, dataId) {
 
         htmlMin += `
           <div class="parte-card">
-            <div class="col-descricao">${item.parte}</div>
+            <div class="col-descricao">${contadorPartes}. ${item.parte}</div>
             <div class="col-salas">
               <div class="sala-box sala-principal">
                 <strong>Salão Principal:</strong> ${item.principal_estudante} ${item.principal_ajudante ? 'e ' + item.principal_ajudante : ''}
@@ -198,9 +202,12 @@ function exibirTabelaReuniao(dados, dataId) {
 
     if (dados.partesVida && dados.partesVida.length > 0) {
       dados.partesVida.forEach((item) => {
+        // Continua incrementando a partir de onde o Ministério parou (5, 6, 7...)
+        contadorPartes++;
+
         htmlVid += `
           <div class="parte-card">
-            <div class="col-descricao">${item.parte}</div>
+            <div class="col-descricao">${contadorPartes}. ${item.parte}</div>
             <div class="col-salas">
               <div class="sala-box sala-principal"><strong>Orador:</strong> ${item.orador}</div>
             </div>
@@ -233,7 +240,6 @@ function exibirTabelaReuniao(dados, dataId) {
   // 6. Controle do Bloco do Conselheiro da Sala B no topo
   const blocoConselheiro = document.getElementById("bloco-conselheiro-b");
   if (blocoConselheiro) {
-    // Só exibe o conselheiro se a Sala B tiver sido usada em alguma parte da semana
     if (temSalaB && dados.conselheiroSalaB && dados.conselheiroSalaB.trim() !== "") {
       blocoConselheiro.style.display = "block";
     } else {
@@ -241,6 +247,7 @@ function exibirTabelaReuniao(dados, dataId) {
     }
   }
 }
+
 
 // Função auxiliar de proteção para o layout caso o banco falhe
 function exibirMensagemErro(mensagem) {
