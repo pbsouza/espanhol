@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel ADM - Reunião de Fim de Semana</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
+</head>
+<body class="adm-body">
+
+    <div class="adm-container">
+        <h2>📝 Designar Participantes da Reunião de Fim de Semana</h2>
+        <p class="adm-sub">Insira os dados da reunião abaixo para atualizar o site automaticamente.</p>
+
+        <form id="form-fim-semana">
+            <fieldset>
+                <legend>🗓️ Informações Gerais</legend>
+                <div class="form-group">
+                    <label for="id-semana">Data da Reunião (Fim de Semana):</label>
+                    <input type="date" id="id-semana" required>
+                </div>
+                
+                <div class="form-group-checkbox" style="margin: 15px 0; display: flex; align-items: center; gap: 10px; background: #f4f8fa; padding: 10px; border-radius: 6px; border-left: 4px solid #3498db;">
+                    <input type="checkbox" id="check-visita" style="width: 20px; height: 20px; cursor: pointer;">
+                    <label for="check-visita" style="font-weight: bold; color: #2c3e50; cursor: pointer;">✨ Semana da Visita do Superintendente de Circuito</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="presidente">Presidente:</label>
+                    <input type="text" id="presidente" placeholder="Nome do irmão" required>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>🎤 Discurso Público</legend>
+                <div class="form-group">
+                    <label for="discurso-tema">Tema do Discurso:</label>
+                    <input type="text" id="discurso-tema" placeholder="Ex: O Reino de Deus Já Está Governando?" required>
+                </div>
+                <div class="form-group">
+                    <label for="discurso-orador">Orador:</label>
+                    <input type="text" id="discurso-orador" placeholder="Nome do irmão" required>
+                </div>
+                <div class="form-group">
+                    <label for="discurso-congregacao">Congregação do Orador:</label>
+                    <input type="text" id="discurso-congregacao" placeholder="Ex: Linhares Central" required>
+                </div>
+            </fieldset>
+
+            <fieldset id="secao-sentinela">
+                <legend>📖 Estudo da Sentinela</legend>
+                <div class="form-group" id="container-leitor">
+                    <label for="sentinela-leitor">Leitor:</label>
+                    <input type="text" id="sentinela-leitor" placeholder="Nome do irmão" required>
+                </div>
+            </fieldset>
+
+            <fieldset id="secao-visita-extra" style="display: none; border-left: 4px solid #9b59b6; background: #faf8fc;">
+                <legend style="color: #8e44ad;">👔 Conclusão da Visita</legend>
+                <div class="form-group">
+                    <label for="visita-discurso-final">Tema do Discurso Final do Superintendente:</label>
+                    <input type="text" id="visita-discurso-final" placeholder="Ex: Firmeza na Fé em Tempos Críticos">
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn-salvar">💾 Salvar Programação</button>
+        </form>
+    </div>
+
+    <div class="acessibilidade-container">
+        <span class="acessibilidade-label">Texto:</span>
+        <button id="btn-diminuir" class="btn-acessibilidade" title="Diminuir texto">A-</button>
+        <button id="btn-normal" class="btn-acessibilidade" title="Texto normal">A</button>
+        <button id="btn-aumentar" class="btn-acessibilidade" title="Aumentar texto">A+</button>
+    </div>
+
+    <div id="modal-alerta" class="modal-overlay">
+        <div class="modal-conteudo">
+            <div class="modal-icone">✔</div>
+            <h3 id="modal-titulo">Sucesso!</h3>
+            <p id="modal-mensagem">A programação foi salva com sucesso no banco de dados.</p>
+            <button type="button" id="btn-fechar-modal" class="btn-modal-ok">Ok!</button>
+        </div>
+    </div>
+
+    <script src="adm_fim_semana.js"></script>
+
+</body>
+</html>

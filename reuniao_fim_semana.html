@@ -3,62 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel ADM - Reunião de Fim de Semana</title>
+    <title>Programação Mensal - Fim de Semana</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Scripts do Firebase Compat -->
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
-    <script src="config.js"></script>
 </head>
-<body class="adm-body">
+<body>
 
-    <div class="adm-container">
-        <h2>📝 Designar Participantes da Reunião de Fim de Semana</h2>
-        <p class="adm-sub">Insira os dados da reunião abaixo para atualizar o site automaticamente.</p>
+    <header style="text-align: center; margin-bottom: 20px;">
+        <h1>Reunião Fim de Semana</h1>
+        <div class="nav-container">
+            <button id="btn-mes-anterior" class="btn-nav"><< Mês Anterior</button>
+            <button id="btn-mes-atual" class="btn-nav btn-atual">Mês Atual</button>
+            <button id="btn-mes-proximo" class="btn-nav">Próximo Mês >></button>
+        </div>
+        <h2 id="exibicao-mes-ano" style="margin-top: 15px; color: #2c3e50; text-transform: capitalize;">—</h2>
+    </header>
 
-        <form id="form-fim-semana">
-            <fieldset>
-                <legend>🗓️ Informações Gerais</legend>
-                <div class="form-group">
-                    <label for="id-semana">Data da Reunião (Fim de Semana):</label>
-                    <input type="date" id="id-semana" required>
-                </div>
-                <div class="form-group">
-                    <label for="presidente">Presidente:</label>
-                    <input type="text" id="presidente" placeholder="Nome do irmão" required>
-                </div>
-            </fieldset>
+    <main>
+        <div id="container-reunioes-mes" class="reuniao-container">
+            <p style="text-align: center; color: #777;">Carregando programações do mês...</p>
+        </div>
+    </main>
 
-            <fieldset>
-                <legend>🎤 Discurso Público</legend>
-                <div class="form-group">
-                    <label for="discurso-tema">Tema do Discurso:</label>
-                    <input type="text" id="discurso-tema" placeholder="Ex: O Reino de Deus Já Está Governando?" required>
-                </div>
-                <div class="form-group">
-                    <label for="discurso-orador">Orador:</label>
-                    <input type="text" id="discurso-orador" placeholder="Nome do irmão" required>
-                </div>
-                <div class="form-group">
-                    <label for="discurso-congregacao">Congregação do Orador:</label>
-                    <input type="text" id="discurso-congregacao" placeholder="Ex: Linhares Central" required>
-                </div>
-            </fieldset>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
 
-            <fieldset>
-                <legend>📖 Estudo da Sentinela</legend>
-                <div class="form-group">
-                    <label for="sentinela-leitor">Leitor da Sentinela:</label>
-                    <input type="text" id="sentinela-leitor" placeholder="Nome do irmão" required>
-                </div>
-            </fieldset>
-
-            <button type="submit" class="btn-salvar">💾 Salvar Programação</button>
-        </form>
-    </div>
-
-    <!-- Componentes de Acessibilidade e Modal -->
     <div class="acessibilidade-container">
         <span class="acessibilidade-label">Texto:</span>
         <button id="btn-diminuir" class="btn-acessibilidade" title="Diminuir texto">A-</button>
@@ -66,17 +35,6 @@
         <button id="btn-aumentar" class="btn-acessibilidade" title="Aumentar texto">A+</button>
     </div>
 
-    <div id="modal-alerta" class="modal-overlay">
-        <div class="modal-conteudo">
-            <div class="modal-icone">✔</div>
-            <h3 id="modal-titulo">Sucesso!</h3>
-            <p id="modal-mensagem">A programação foi salva com sucesso no banco de dados.</p>
-            <button type="button" id="btn-fechar-modal" class="btn-modal-ok">Ok!</button>
-        </div>
-    </div>
-
-    <!-- Arquivo JavaScript específico para esta reunião -->
-    <script src="adm_fim_semana.js"></script>
-
+    <script src="reuniao_fim_semana.js"></script>
 </body>
 </html>
