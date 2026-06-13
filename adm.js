@@ -9,18 +9,30 @@ firebase.auth().onAuthStateChanged((user) => {
 
 // 2. AGUARDA O CARREGAMENTO DA PÁGINA
 document.addEventListener("DOMContentLoaded", () => {
+
+    // --- VÍNCULO DIRETO EM TEMPO REAL: LEITURA DA SEMANA -> TÍTULO DAS JOIAS ---
+    const inputLeituraSemana = document.getElementById("leitura-semana");
+    const inputJoiasOculto = document.getElementById("tesouros-joias-tema");
+    const textoDinamicoJoias = document.getElementById("texto-dinamico-joias");
+
+    if (inputLeituraSemana && inputJoiasOculto && textoDinamicoJoias) {
+        inputLeituraSemana.addEventListener("input", () => {
+            const valor = inputLeituraSemana.value.trim().toUpperCase();
+            inputJoiasOculto.value = valor; // Salva o valor idêntico no input oculto para o Firebase
+            textoDinamicoJoias.innerText = valor ? ` - ${valor}` : ""; // Atualiza o visual "Jóias Espirituais - Jeremias 4-6"
+        });
+    }
     
     const containerMinisterio = document.getElementById("container-ministerio-partes");
     const btnAddMinisterio = document.getElementById("btn-add-ministerio");
     const containerVida = document.getElementById("container-vida-partes");
     const btnAddVida = document.getElementById("btn-add-vida");
-    const btnAddVisitaSuper = document.getElementById("btn-add-visita-super"); // 🔥 ADICIONADO AQUI!
+    const btnAddVisitaSuper = document.getElementById("btn-add-visita-super"); 
     const formReuniao = document.getElementById("form-reuniao");
     const inputData = document.getElementById("id-semana");
 
-        // --- FUNÇÃO PRIVADA: ATUALIZA A NUMERAÇÃO DE FORMA SEQUENCIAL ---
+    // --- FUNÇÃO PRIVADA: ATUALIZA A NUMERAÇÃO DE FORMA SEQUENCIAL ---
     function atualizarNumeracaoFormulario() {
-        // As 3 primeiras partes são fixas (Discurso, Joias, Leitura)
         let contador = 3;
 
         // 1. Varre e numera os itens do Ministério
@@ -57,7 +69,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const dataId = inputData.value;
         if (!dataId) return;
 
-        // Limpa os campos dinâmicos antigos antes de carregar os novos
         containerMinisterio.innerHTML = "";
         containerVida.innerHTML = "";
 
@@ -66,10 +77,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (doc.exists) {
                     const dados = doc.data();
                     
-                    // Preenche os campos fixos
+                    const leituraSmn = dados.leituraSemana || "";
+                    document.getElementById("leitura-semana").value = leituraSmn;
+
                     document.getElementById("cantico-inicial").value = dados.canticoInicial || "";
                     document.getElementById("cantico-final").value = dados.canticoFinal || "";
-                    document.getElementById("leitura-semana").value = dados.leituraSemana || "";
                     document.getElementById("presidente").value = dados.presidente || "";
                     document.getElementById("oracao-inicial").value = dados.oracaoInicial || "";
                     document.getElementById("conselheiro-sala-b").value = dados.conselheiroSalaB || "";
@@ -77,12 +89,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                     document.getElementById("tesouros-discurso-tema").value = dados.tesouros?.discurso10min?.tema || "";
                     document.getElementById("tesouros-discurso-designado").value = dados.tesouros?.discurso10min?.designado || dados.tesouros?.discurso10min?.designated || "";
-                    document.getElementById("tesouros-joias-tema").value = dados.tesouros?.joias10min?.tema || "";
-                    document.getElementById("tesouros-joias-designado").value = dados.tesouros?.joias10min?.designado || dados.tesouros?.joias10min?.designated || "";
                     document.getElementById("leitura-principal").value = dados.tesouros?.leituraBiblia_salaPrincipal || "";
                     document.getElementById("leitura-sala-b").value = dados.tesouros?.leituraBiblia_salaB || "";
                     document.getElementById("estudo-dirigente").value = dados.estudoDirigente || "";
                     document.getElementById("estudo-leitor").value = dados.estudoLeitor || "";
+
+                    // Garante o preenchimento do tema oculto e do texto dinâmico ao ler do Firebase
+                    const temaJoiasSalvo = dados.tesouros?.joias10min?.tema || leituraSmn;
+                    if (inputJoiasOculto) inputJoiasOculto.value = temaJoiasSalvo;
+                    if (textoDinamicoJoias) {
+                        textoDinamicoJoias.innerText = temaJoiasSalvo ? ` - ${temaJoiasSalvo}` : "";
+                    }
+                    
+                    document.getElementById("tesouros-joias-designado").value = dados.tesouros?.joias10min?.designado || dados.tesouros?.joias10min?.designated || "";
 
                     // Preenche dinamicamente as partes do Ministério
                     if (dados.facaSeuMelhor && Array.isArray(dados.facaSeuMelhor)) {
@@ -108,17 +127,18 @@ document.addEventListener("DOMContentLoaded", () => {
                         });
                     }
                     
-                    // Ajusta a numeração inicial dos dados vindos do Firebase
                     atualizarNumeracaoFormulario();
                     console.log("Dados carregados para edição!");
                 } else {
                     console.log("Nova semana. Formulário pronto para preenchimento.");
+                    if (textoDinamicoJoias) textoDinamicoJoias.innerText = "";
+                    if (inputJoiasOculto) inputJoiasOculto.value = "";
+                    atualizarNumeracaoFormulario();
                 }
             })
             .catch(error => console.error("Erro ao carregar dados para o ADM:", error));
     });
 
-    // Funções auxiliares internas para evitar disparo de cliques infinitos ao carregar dados
     function adicionarBlocoMinisterioDirect() {
         const div = document.createElement("div");
         div.className = "card-dinamico bloco-ministerio-item";
@@ -129,27 +149,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 <label class="label-num-dinamica" style="font-weight: bold; color: #b78a00;">Parte - Título/Descrição:</label>
                 <input type="text" class="min-parte" placeholder="Ex: Inicie Conversas (4 min.)" required style="width: 100%; box-sizing: border-box;">
             </div>
-            
             <div class="form-group" style="margin-bottom: 12px;">
                 <label>Salão Principal — Estudante:</label>
                 <input type="text" class="min-p-estudante" placeholder="Nome do estudante" required style="width: 100%; box-sizing: border-box;">
             </div>
-            
             <div class="form-group" style="margin-bottom: 12px;">
                 <label>Salão Principal — Ajudante:</label>
                 <input type="text" class="min-p-ajudante" placeholder="Ajudante (se houver)" style="width: 100%; box-sizing: border-box;">
             </div>
-            
             <div class="form-group" style="margin-bottom: 12px;">
                 <label>Sala B — Estudante:</label>
                 <input type="text" class="min-b-estudante" placeholder="Estudante (se houver)" style="width: 100%; box-sizing: border-box;">
             </div>
-            
             <div class="form-group" style="margin-bottom: 15px;">
                 <label>Sala B — Ajudante:</label>
                 <input type="text" class="min-b-ajudante" placeholder="Ajudante (se houver)" style="width: 100%; box-sizing: border-box;">
             </div>
-            
             <div style="text-align: right;">
                 <button type="button" class="btn-remover-parte" style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">
                     ❌ Remover Esta Parte
@@ -157,7 +172,6 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
 
-        // Lógica de escuta para o botão remover recalcular os números dinamicamente
         div.querySelector(".btn-remover-parte").addEventListener("click", () => {
             div.remove();
             atualizarNumeracaoFormulario();
@@ -176,12 +190,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 <label class="label-num-dinamica" style="font-weight: bold; color: #d35400;">Parte - Título/Descrição:</label>
                 <input type="text" class="vida-parte" placeholder="Ex: Necessidades da Congregação (15 min.)" required style="width: 100%; box-sizing: border-box;">
             </div>
-            
             <div class="form-group" style="margin-bottom: 15px;">
                 <label>Orador:</label>
                 <input type="text" class="vida-orador" placeholder="Nome do orador designado" required style="width: 100%; box-sizing: border-box;">
             </div>
-            
             <div style="text-align: right;">
                 <button type="button" class="btn-remover-parte" style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">
                     ❌ Remover Esta Parte
@@ -189,7 +201,6 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
 
-        // Lógica de escuta para o botão remover recalcular os números dinamicamente
         div.querySelector(".btn-remover-parte").addEventListener("click", () => {
             div.remove();
             atualizarNumeracaoFormulario();
@@ -198,19 +209,16 @@ document.addEventListener("DOMContentLoaded", () => {
         containerVida.appendChild(div);
     }
 
-    // --- FUNÇÃO: ELEMENTOS DINÂMICOS (MINISTÉRIO REORGANIZADO VIA BOTÃO) ---
     btnAddMinisterio.addEventListener("click", () => {
         adicionarBlocoMinisterioDirect();
-        atualizarNumeracaoFormulario(); // Atualiza a contagem na hora
+        atualizarNumeracaoFormulario();
     });
 
-    // --- FUNÇÃO: ELEMENTOS DINÂMICOS DA VIDA CRISTÃ VIA BOTÃO ---
     btnAddVida.addEventListener("click", () => {
         adicionarBlocoVidaDirect();
-        atualizarNumeracaoFormulario(); // Atualiza a contagem na hora
+        atualizarNumeracaoFormulario();
     });
 
-    // --- FUNÇÃO: ATALHO PARA VISITA DO SUPERINTENDENTE ---
     if (btnAddVisitaSuper) {
         btnAddVisitaSuper.addEventListener("click", () => {
             adicionarBlocoVidaDirect();
@@ -222,7 +230,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ultimoBloco.style.borderLeft = "4px solid #9b59b6";
             ultimoBloco.style.background = "#fcf9fe";
             
-            atualizarNumeracaoFormulario(); // Atualiza a contagem na hora
+            atualizarNumeracaoFormulario();
         });
     }
 
@@ -282,27 +290,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         db.collection("reunioes_meio_semana").doc(dataId).set(dadosReuniao)
             .then(() => {
-                mostrarAlertaCustomizado(
-                    "✔", 
-                    "Sucesso!", 
-                    "A programação da semana foi salva com sucesso."
-                );
-                
+                mostrarAlertaCustomizado("✔", "Sucesso!", "A programação da semana foi salva com sucesso.");
                 formReuniao.reset();
                 containerMinisterio.innerHTML = "";
                 containerVida.innerHTML = "";
+                if (textoDinamicoJoias) textoDinamicoJoias.innerText = "";
+                
+                // 🔥 CORREÇÃO: Força o recálculo imediato da numeração após limpar os blocos da tela
+                atualizarNumeracaoFormulario();
             })
             .catch((error) => {
                 console.error("Erro ao salvar os dados: ", error);
-                mostrarAlertaCustomizado(
-                    "❌", 
-                    "Ops, algo deu errado", 
-                    "Não foi possível salvar os dados. Verifique o console do navegador."
-                );
+                mostrarAlertaCustomizado("❌", "Ops, algo deu errado", "Não foi possível salvar os dados.");
             });
     });
 
-    // --- FUNÇÃO PARA EXIBIR E FECHAR O MODAL ---
     const modal = document.getElementById("modal-alerta");
     const btnFecharModal = document.getElementById("btn-fechar-modal");
 
@@ -310,7 +312,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("modal-titulo").innerText = titulo;
         document.getElementById("modal-mensagem").innerText = mensagem;
         modal.querySelector(".modal-icone").innerText = icone; 
-        
         modal.classList.add("mostrar");
     }
 
@@ -320,47 +321,23 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- CÓDIGO DE ACESSIBILIDADE (ZOOM) PARA O ADM ---
+    // --- CÓDIGO DE ACESSIBILIDADE (ZOOM) ---
     const btnDiminuir = document.getElementById("btn-diminuir");
     const btnNormal = document.getElementById("btn-normal");
     const btnAumentar = document.getElementById("btn-aumentar");
 
     let nivelAtual = 0;
-
-    const todasAsClasses = [
-        "zoom-minus-3", "zoom-minus-2", "zoom-minus-1",
-        "zoom-plus-1", "zoom-plus-2", "zoom-plus-3"
-    ];
+    const todasAsClasses = ["zoom-minus-3", "zoom-minus-2", "zoom-minus-1", "zoom-plus-1", "zoom-plus-2", "zoom-plus-3"];
 
     function atualizarZoom() {
         document.body.classList.remove(...todasAsClasses);
-
-        if (nivelAtual > 0) {
-            document.body.classList.add(`zoom-plus-${nivelAtual}`);
-        } else if (nivelAtual < 0) {
-            document.body.classList.add(`zoom-minus-${Math.abs(nivelAtual)}`);
-        }
-        console.log("Zoom ADM aplicado:", nivelAtual);
+        if (nivelAtual > 0) document.body.classList.add(`zoom-plus-${nivelAtual}`);
+        else if (nivelAtual < 0) document.body.classList.add(`zoom-minus-${Math.abs(nivelAtual)}`);
     }
 
     if (btnDiminuir && btnNormal && btnAumentar) {
-        btnAumentar.addEventListener("click", () => {
-            if (nivelAtual < 3) {
-                nivelAtual++;
-                atualizarZoom();
-            }
-        });
-
-        btnDiminuir.addEventListener("click", () => {
-            if (nivelAtual > -3) {
-                nivelAtual--;
-                atualizarZoom();
-            }
-        });
-
-        btnNormal.addEventListener("click", () => {
-            nivelAtual = 0;
-            atualizarZoom();
-        });
+        btnAumentar.addEventListener("click", () => { if (nivelAtual < 3) { nivelAtual++; atualizarZoom(); } });
+        btnDiminuir.addEventListener("click", () => { if (nivelAtual > -3) { nivelAtual--; atualizarZoom(); } });
+        btnNormal.addEventListener("click", () => { nivelAtual = 0; atualizarZoom(); });
     }
 });

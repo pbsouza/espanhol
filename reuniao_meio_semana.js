@@ -221,10 +221,10 @@ function exibirTabelaReuniao(dados, dataId) {
       contadorPartes++;
 
       htmlVid += `
-        <div class="parte-card" style="border-left: 4px solid #00a8ff; background-color: #f7fbfe;">
+        <div class="parte-card">
           <div class="col-descricao">${contadorPartes}. Estudo Bíblico de Congregação</div>
           <div class="col-salas">
-            <div class="sala-box sala-principal" style="border-left-color: #00a8ff;">
+            <div class="sala-box sala-principal">
               <strong>Dirigente:</strong> ${dados.estudoDirigente} <br>
               <strong>Leitor:</strong> ${dados.estudoLeitor || 'Não designado'}
             </div>
