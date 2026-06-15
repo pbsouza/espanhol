@@ -858,3 +858,97 @@ body[class*="zoom-plus-"] .form-group {
     }
 }
 
+/* ============================================================
+   MENU HAMBÚRGUER (ESTILO CARD ELEGANTE)
+   ============================================================ */
+
+.hamburguer-container {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 99999;
+}
+
+/* Botão 30% menor, compacto e elegante */
+.btn-hamburguer-menu {
+    background-color: #143109 !important;
+    color: #ffffff !important;
+    border: none;
+    font-size: 1.1rem !important;
+    padding: 0 !important;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    font-weight: bold;
+    line-height: 1;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Efeito de passar o mouse no botão */
+.btn-hamburguer-menu:hover {
+    background-color: #1d470d !important;
+}
+
+/* Efeito de clique físico no botão */
+.btn-hamburguer-menu:active {
+    transform: scale(0.95);
+}
+
+/* Caixa flutuante do menu (estilo o da imagem) */
+.menu-opcoes-card {
+    display: none;
+    position: absolute;
+    top: 38px;
+    right: 0;
+    background: #ffffff !important;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    width: 230px;
+    overflow: hidden;
+    padding: 5px 0;
+}
+
+/* Links do menu */
+.menu-opcoes-card a, #tema-menu {
+    display: flex;
+    align-items: center;
+    padding: 11px 16px;
+    color: #143109 !important;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    background-color: #ffffff !important;
+    transition: background-color 0.2s ease;
+}
+
+/* Efeito hover nos links */
+.menu-opcoes-card a:hover {
+    background-color: #f4f6f3 !important;
+}
+
+/* Ícones decorativos dentro do link */
+.menu-opcoes-card a .icon {
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+/* Divisória interna sutil */
+.menu-divisor {
+    height: 1px;
+    background: rgba(0,0,0,0.06);
+    margin: 0 12px;
+}
+
+/* Destaque para identificar a página ativa (Painel ADM) */
+.menu-item-ativo {
+    background-color: #f4f6f3 !important;
+    border-left: 3px solid #143109;
+}

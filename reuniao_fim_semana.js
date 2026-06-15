@@ -219,37 +219,35 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- LÓGICA DO MENU HAMBÚRGUER (COM TRAVA DE TAMANHO COMPACTO) ---
+// --- LÓGICA DO MENU HAMBÚRGUER (COMPACTO COM TROCA DE ÍCONE) ---
     const btnHamburguer = document.getElementById('btn-hamburguer');
     const menuOpcoes = document.getElementById('menu-opcoes');
 
     if (btnHamburguer && menuOpcoes) {
+        // Garante o estado inicial fechado
         menuOpcoes.style.display = 'none';
 
         btnHamburguer.addEventListener('click', (e) => {
-            e.stopPropagation();
+            e.stopPropagation(); // Impede o clique de fechar o menu na mesma hora
             
             if (menuOpcoes.style.display === 'none') {
                 menuOpcoes.style.display = 'block';
-                btnHamburguer.innerHTML = '✕'; // Usa o X fino e elegante
-                // Trava o tamanho compacto inline para o zoom não distorcer
-                btnHamburguer.style.setProperty('font-size', '1.1rem', 'important');
+                btnHamburguer.innerHTML = '✕'; // Vira o X quando abre
             } else {
                 menuOpcoes.style.display = 'none';
-                btnHamburguer.innerHTML = '☰';
-                btnHamburguer.style.setProperty('font-size', '1.1rem', 'important');
+                btnHamburguer.innerHTML = '☰'; // Volta para as listras
             }
         });
 
+        // Impede que cliques internos dentro da caixinha fechem o menu
         menuOpcoes.addEventListener('click', (e) => {
             e.stopPropagation();
         });
 
+        // Se o usuário clicar em qualquer ponto fora do menu, fecha tudo
         document.addEventListener('click', () => {
             menuOpcoes.style.display = 'none';
             btnHamburguer.innerHTML = '☰';
-            btnHamburguer.style.setProperty('font-size', '1.1rem', 'important');
         });
     }
-
 });

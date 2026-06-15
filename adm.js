@@ -303,6 +303,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("Erro ao salvar os dados: ", error);
                 mostrarAlertaCustomizado("❌", "Ops, algo deu errado", "Não foi possível salvar os dados.");
             });
+
+    
+
+            
     });
 
     const modal = document.getElementById("modal-alerta");
@@ -339,5 +343,37 @@ document.addEventListener("DOMContentLoaded", () => {
         btnAumentar.addEventListener("click", () => { if (nivelAtual < 3) { nivelAtual++; atualizarZoom(); } });
         btnDiminuir.addEventListener("click", () => { if (nivelAtual > -3) { nivelAtual--; atualizarZoom(); } });
         btnNormal.addEventListener("click", () => { nivelAtual = 0; atualizarZoom(); });
+    }
+
+    // --- LÓGICA DO MENU HAMBÚRGUER (COMPACTO COM TROCA DE ÍCONE) ---
+    const btnHamburguer = document.getElementById('btn-hamburguer');
+    const menuOpcoes = document.getElementById('menu-opcoes');
+
+    if (btnHamburguer && menuOpcoes) {
+        // Garante o estado inicial fechado
+        menuOpcoes.style.display = 'none';
+
+        btnHamburguer.addEventListener('click', (e) => {
+            e.stopPropagation(); // Impede o clique de fechar o menu na mesma hora
+            
+            if (menuOpcoes.style.display === 'none') {
+                menuOpcoes.style.display = 'block';
+                btnHamburguer.innerHTML = '✕'; // Vira o X quando abre
+            } else {
+                menuOpcoes.style.display = 'none';
+                btnHamburguer.innerHTML = '☰'; // Volta para as listras
+            }
+        });
+
+        // Impede que cliques internos dentro da caixinha fechem o menu
+        menuOpcoes.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Se o usuário clicar em qualquer ponto fora do menu, fecha tudo
+        document.addEventListener('click', () => {
+            menuOpcoes.style.display = 'none';
+            btnHamburguer.innerHTML = '☰';
+        });
     }
 });
