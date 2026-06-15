@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Recupera o tamanho salvo no navegador ou define 100% como padrão
     let tamanhoAtual = parseInt(localStorage.getItem('fontSizeAdm')) || 100;
 
-    // Esta função força o tamanho em todos os elementos fixos do HTML, quebrando a trava do CSS
+    // Função corrigida com a palavra 'function' e variáveis uniformes
     function aplicarTamanhoFonte() {
         // 1. Aplica a proporção base no body
         document.body.style.fontSize = tamanhoAtual + '%';
@@ -177,10 +177,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const novoTamanhoRem = tamanhoAtual / 100;
 
         // 3. Seleciona todos os elementos fixos que o CSS travou com !important
-        const elementosRígidos = document.querySelectorAll('.adm-body input, .adm-body label, .adm-body legend, .adm-body button, .adm-body select');
+        const elementosRigidos = document.querySelectorAll('.adm-body input, .adm-body label, .adm-body legend, .adm-body button, .adm-body select');
         
         // 4. Força o novo tamanho inline direto em cada um deles com prioridade máxima absoluta
-        elementosRígidos.forEach(elemento => {
+        elementosRigidos.forEach(elemento => {
             elemento.style.setProperty('font-size', `${novoTamanhoRem}rem`, 'important');
         });
         
@@ -211,4 +211,37 @@ document.addEventListener("DOMContentLoaded", () => {
             aplicarTamanhoFonte();
         });
     }
-});
+
+// --- LÓGICA DO MENU HAMBÚRGUER (COM TRAVA DE TAMANHO COMPACTO) ---
+    const btnHamburguer = document.getElementById('btn-hamburguer');
+    const menuOpcoes = document.getElementById('menu-opcoes');
+
+    if (btnHamburguer && menuOpcoes) {
+        menuOpcoes.style.display = 'none';
+
+        btnHamburguer.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            if (menuOpcoes.style.display === 'none') {
+                menuOpcoes.style.display = 'block';
+                btnHamburguer.innerHTML = '✕'; // Usa o X fino e elegante
+                // Trava o tamanho compacto inline para o zoom não distorcer
+                btnHamburguer.style.setProperty('font-size', '1.1rem', 'important');
+            } else {
+                menuOpcoes.style.display = 'none';
+                btnHamburguer.innerHTML = '☰';
+                btnHamburguer.style.setProperty('font-size', '1.1rem', 'important');
+            }
+        });
+
+        menuOpcoes.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        document.addEventListener('click', () => {
+            menuOpcoes.style.display = 'none';
+            btnHamburguer.innerHTML = '☰';
+            btnHamburguer.style.setProperty('font-size', '1.1rem', 'important');
+        });
+    }
+}); 

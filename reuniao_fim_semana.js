@@ -218,4 +218,38 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem('fontSizeView', tamanhoAtual);
         });
     }
+
+    // --- LÓGICA DO MENU HAMBÚRGUER (COM TRAVA DE TAMANHO COMPACTO) ---
+    const btnHamburguer = document.getElementById('btn-hamburguer');
+    const menuOpcoes = document.getElementById('menu-opcoes');
+
+    if (btnHamburguer && menuOpcoes) {
+        menuOpcoes.style.display = 'none';
+
+        btnHamburguer.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            if (menuOpcoes.style.display === 'none') {
+                menuOpcoes.style.display = 'block';
+                btnHamburguer.innerHTML = '✕'; // Usa o X fino e elegante
+                // Trava o tamanho compacto inline para o zoom não distorcer
+                btnHamburguer.style.setProperty('font-size', '1.1rem', 'important');
+            } else {
+                menuOpcoes.style.display = 'none';
+                btnHamburguer.innerHTML = '☰';
+                btnHamburguer.style.setProperty('font-size', '1.1rem', 'important');
+            }
+        });
+
+        menuOpcoes.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        document.addEventListener('click', () => {
+            menuOpcoes.style.display = 'none';
+            btnHamburguer.innerHTML = '☰';
+            btnHamburguer.style.setProperty('font-size', '1.1rem', 'important');
+        });
+    }
+
 });
