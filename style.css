@@ -952,3 +952,117 @@ body[class*="zoom-plus-"] .form-group {
     background-color: #f4f6f3 !important;
     border-left: 3px solid #143109;
 }
+
+/* ============================================================
+   TELA DE SELEÇÃO DO PAINEL ADMINISTRATIVO
+   ============================================================ */
+
+/* Container centralizado na tela */
+.selecao-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #f4f7f4; /* Tom sutil que combina com a identidade verde */
+}
+
+.selecao-card-principal {
+    width: 100%;
+    max-width: 650px;
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(20, 49, 9, 0.08);
+    text-align: center;
+}
+
+.selecao-icone-topo {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.selecao-card-principal h2 {
+    color: var(--cor-principal);
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.selecao-subtitulo {
+    color: #666666;
+    margin-bottom: 35px;
+    font-size: 1rem;
+}
+
+/* Grid que organiza os cartões lado a lado ou empilhados no celular */
+.selecao-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* Cartões de escolha (Links) */
+.card-opcao-adm {
+    text-decoration: none;
+    display: block;
+    background: #ffffff;
+    border: 2px solid rgba(20, 49, 9, 0.08);
+    padding: 25px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    text-align: center;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-opcao-adm .card-icone {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+}
+
+.card-opcao-adm h3 {
+    color: var(--cor-principal);
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.card-opcao-adm p {
+    color: #777777;
+    font-size: 0.88rem;
+    line-height: 1.4;
+}
+
+/* Efeitos de Interação nos Cartões */
+.card-opcao-adm:hover {
+    transform: translateY(-4px);
+    border-color: var(--cor-principal);
+    box-shadow: 0 8px 20px rgba(20, 49, 9, 0.12);
+}
+
+.card-opcao-adm:active {
+    transform: translateY(-1px);
+}
+
+/* Botão de Logout */
+.btn-logout-selecao {
+    background: transparent;
+    color: #cc3333;
+    border: 1px solid rgba(204, 51, 51, 0.3);
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-logout-selecao:hover {
+    background-color: rgba(204, 51, 51, 0.05);
+    border-color: #cc3333;
+}
+
+.btn-logout-selecao:active {
+    transform: scale(0.98);
+}

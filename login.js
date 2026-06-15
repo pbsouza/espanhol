@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         auth.signInWithEmailAndPassword(email, senha)
             .then((userCredential) => {
                 // Login com sucesso! Redireciona para a página do ADM
-                window.location.href = "adm.html";
+                window.location.href = "adm_selecao.html";
             })
             .catch((error) => {
                 // Se der erro, exibe na tela para o utilizador

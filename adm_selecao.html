@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Seleção</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
+</head>
+<body class="selecao-body">
+
+    <div class="selecao-card-principal">
+        
+        <div class="selecao-icone-topo">🛡️</div>
+        
+        <h2>Painel de Controle Administrativo</h2>
+        <p class="selecao-subtitulo">Selecione abaixo qual programação deseja gerenciar e atualizar no sistema:</p>
+
+        <div class="selecao-grid">
+            
+            <a href="adm.html" class="card-opcao-adm">
+                <div class="card-icone">📅</div>
+                <h3>Reunião do Meio de Semana</h3>
+                <p>Designações da Reunião Vida e Ministério Cristão.</p>
+            </a>
+
+            <a href="adm_fim_semana.html" class="card-opcao-adm">
+                <div class="card-icone">👔</div>
+                <h3>Reunião do Fim de Semana</h3>
+                <p>Designações do Discurso Público e A Sentinela.</p>
+            </a>
+
+        </div>
+
+        <button id="btn-logout" class="btn-logout-selecao">
+            🚪 Sair do Sistema (Logout)
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Garante barreira de segurança contra acessos sem login direto pela URL
+            firebase.auth().onAuthStateChanged((user) => {
+                if (!user) {
+                    window.location.href = "login.html"; 
+                }
+            });
+
+            // Executa a saída segura do Firebase Auth
+            const btnLogout = document.getElementById('btn-logout');
+            if (btnLogout) {
+                btnLogout.addEventListener('click', () => {
+                    firebase.auth().signOut().then(() => {
+                        window.location.href = "login.html";
+                    }).catch((error) => {
+                        console.error("Erro ao deslogar:", error);
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html> 
