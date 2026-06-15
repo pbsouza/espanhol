@@ -1066,3 +1066,110 @@ body[class*="zoom-plus-"] .form-group {
 .btn-logout-selecao:active {
     transform: scale(0.98);
 }
+
+/* Botão de Voltar ao Quadro */
+.btn-voltar-quadro {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: var(--cor-principal);
+    border: 1px solid rgba(20, 49, 9, 0.2);
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-decoration: none;
+    margin-right: 15px; /* Separação caso fiquem lado a lado */
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-voltar-quadro:hover {
+    background-color: rgba(20, 49, 9, 0.05);
+    border-color: var(--cor-principal);
+}
+
+.btn-voltar-quadro:active {
+    transform: scale(0.98);
+}
+
+/* Container inferior para alinhar os botões de ação */
+.selecao-acoes-rodape {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+/* Ajuste de responsividade para ecrãs pequenos (telemóveis) */
+@media (max-width: 480px) {
+    .selecao-acoes-rodape {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .btn-voltar-quadro, .btn-logout-selecao {
+        width: 100%;
+    }
+}
+
+/* ============================================================
+   BOTÃO DE RETORNO NA TELA DE LOGIN
+   ============================================================ */
+
+/* Container para organizar os botões do formulário de login */
+.login-acoes-rodape {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+/* Estilo do botão voltar específico para a caixa de login */
+.btn-voltar-login {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: var(--cor-principal);
+    border: 1px solid rgba(20, 49, 9, 0.2);
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+    white-space: nowrap;
+}
+
+.btn-voltar-login:hover {
+    background-color: rgba(20, 49, 9, 0.05);
+    border-color: var(--cor-principal);
+}
+
+.btn-voltar-login:active {
+    transform: scale(0.98);
+}
+
+/* Garante que o botão de submit do login divida o espaço corretamente */
+.login-acoes-rodape .btn-salvar, 
+.login-acoes-rodape button[type="submit"] {
+    margin-top: 0 !important; /* Reseta margens antigas que possam quebrar o alinhamento */
+    flex: 1;
+}
+
+/* Ajuste para celulares (telas pequenas) */
+@media (max-width: 480px) {
+    .login-acoes-rodape {
+        flex-direction: column-reverse; /* Coloca o Entrar em cima e o Voltar embaixo */
+        gap: 10px;
+    }
+    .btn-voltar-login,
+    .login-acoes-rodape .btn-salvar,
+    .login-acoes-rodape button[type="submit"] {
+        width: 100%;
+        text-align: center;
+    }
+}
